@@ -1,8 +1,10 @@
-﻿using Discord;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using DiscordBot.Configuration;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DiscordBot.Modules
 {
@@ -24,6 +26,22 @@ namespace DiscordBot.Modules
         public async Task Help()
         {
             await ListAllModules();
+        }
+
+        [Command("Help")]
+        [Summary("Shows the specified modules and its commands.")]
+        public async Task Help(string moduleName)
+        {
+            var module = commands.Modules.Where(x => x.Name.ToLower() == moduleName.ToLower()).FirstOrDefault();
+
+            if (module != null)
+            {
+                await ListModule(module);
+            }
+            else
+            {
+                throw new Exception("Module not found");
+            }
         }
 
         private async Task ListAllModules()
