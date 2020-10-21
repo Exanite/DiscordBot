@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using DiscordBot.Configuration;
+using DiscordBot.Extensions;
 using System;
 using System.Threading.Tasks;
 
@@ -49,8 +50,10 @@ namespace DiscordBot.Services
 
                 if (config.Commands.DeleteErrorMessages)
                 {
-                    await DeleteAfterTime(context.Message, config.Commands.ErrorMessageDeletionTime * 1000);
-                    await DeleteAfterTime(reply, config.Commands.ErrorMessageDeletionTime * 1000);
+                    var delay = TimeSpan.FromSeconds(config.Commands.ErrorMessageDeletionTime);
+
+                    context.Message.DeleteAfterTime(delay).Forget();
+                    reply.DeleteAfterTime(delay).Forget();
                 }
             }
         }
@@ -58,20 +61,6 @@ namespace DiscordBot.Services
         private async Task<IMessage> SendErrorMessage(ICommandContext context, IResult result)
         {
             return await context.Channel.SendMessageAsync($"Unable to process command. Reason: {result.ErrorReason}");
-        }
-
-        private async Task DeleteAfterTime(IMessage message, int millisecondsDelay)
-        {
-            try
-            {
-                await Task.Delay(millisecondsDelay);
-
-                await message.DeleteAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
         }
     }
 }
