@@ -1,6 +1,7 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 using DiscordBot.Configuration;
+using DiscordBot.Infiltrator;
 using DiscordBot.Json;
 using DiscordBot.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -97,7 +98,7 @@ namespace DiscordBot
 
         private void InstallInfiltratorGame(ServiceCollection services)
         {
-            // add infiltrator game dependencies here
+            services.AddSingleton<InfiltratorGameManager>();
         }
     }
 }

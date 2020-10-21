@@ -40,7 +40,7 @@ namespace DiscordBot.General
             }
             else
             {
-                throw new Exception("Module not found");
+                throw new Exception("Module not found.");
             }
         }
 
