@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Modules
+namespace DiscordBot.General
 {
     [Group("Admin")]
     [Summary("Commands used for administering the state of a Discord guild.")]

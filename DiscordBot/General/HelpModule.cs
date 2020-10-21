@@ -6,7 +6,7 @@ using Discord;
 using Discord.Commands;
 using DiscordBot.Configuration;
 
-namespace DiscordBot.Modules
+namespace DiscordBot.General
 {
     [Name("Help")]
     [Summary("Commands used to show how to use this bot.")]

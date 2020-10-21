@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Discord.Commands;
 
-namespace DiscordBot.Modules
+namespace DiscordBot.Infiltrator
 {
     [Group("RPG")]
     [Summary("Commands for the Infiltrator text-based RPG.")]
