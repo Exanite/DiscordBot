@@ -32,7 +32,7 @@ namespace DiscordBot.Modules
         [Summary("Shows the specified modules and its commands.")]
         public async Task Help(string moduleName)
         {
-            var module = commands.Modules.Where(x => x.Name.ToLower() == moduleName.ToLower()).FirstOrDefault();
+            var module = commands.Modules.Where(x => string.Equals(x.Name, moduleName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
             if (module != null)
             {
