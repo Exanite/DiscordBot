@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 
 namespace DiscordBot.Infiltrator
@@ -14,22 +15,22 @@ namespace DiscordBot.Infiltrator
             this.gameManager = gameManager;
         }
 
-        [Command("StartGame")]
+        [Command("StartGame"), Alias("Start")]
         [Summary("Starts a new game of Infiltrator in the current channel.")]
         public async Task StartGame()
         {
             await Context.Channel.SendMessageAsync("Starting a new game of Infiltrator.");
 
-            gameManager.currentGame = new InfiltratorGame(Context);
+            gameManager.CreateGame((ITextChannel)Context.Channel);
 
-            await gameManager.currentGame.Start();
+            await gameManager.CurrentGame.Start();
         }
 
         [Command("Current")]
         [Summary("Shows information about the current game.")]
         public async Task GetCurrent()
         {
-            var game = gameManager.currentGame;
+            var game = gameManager.CurrentGame;
 
             if (game != null)
             {

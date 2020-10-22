@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
 
 namespace DiscordBot.Infiltrator
 {
-
     public class InfiltratorGame
     {
         public List<Player> players = new List<Player>();
@@ -14,14 +12,15 @@ namespace DiscordBot.Infiltrator
         public IUserMessage enemyMessage;
         public int difficultyLevel = 0;
 
-        public readonly DateTimeOffset startTime;
-        public readonly IMessageChannel channel;
-        public readonly ICommandContext context;
+        public DateTimeOffset startTime;
+        public IMessageChannel channel;
 
-        public InfiltratorGame(ICommandContext context)
+        private readonly IDiscordClient client;
+
+        public InfiltratorGame(IDiscordClient client, IMessageChannel channel)
         {
-            this.context = context; // remove later on
-            this.channel = context.Channel;
+            this.client = client;
+            this.channel = channel;
             this.startTime = DateTimeOffset.Now;
         }
 
@@ -38,42 +37,33 @@ namespace DiscordBot.Infiltrator
 
         public Embed BuildEnemyEmbed()
         {
-            var embed = new EmbedBuilder()
-                .WithAuthor(new EmbedAuthorBuilder()
-                {
-                    IconUrl = context.Client.CurrentUser.GetAvatarUrl(),
-                    Name = $"Infiltrator Battle",
-                })
-                .WithDescription("A wild Infiltrator has appeared!")
-                .WithColor(Color.Gold)
-                .WithCurrentTimestamp();
-
-            embed
+            return CreateBaseEmbedBuilder("Infiltrator Battle", "A wild Infiltrator has appeared!")
                 .AddField("Name", enemy.name)
-                .AddField(enemy.health.name, $"{enemy.health.value}/{enemy.health.max}");
-
-            return embed.Build();
+                .AddField(enemy.health.name, $"{enemy.health.value}/{enemy.health.max}")
+                .Build();
         }
 
         public Embed BuildGameInfoEmbed()
         {
-            var embed = new EmbedBuilder()
-                .WithAuthor(new EmbedAuthorBuilder()
-                {
-                    IconUrl = context.Client.CurrentUser.GetAvatarUrl(),
-                    Name = $"Infiltrator Game Info",
-                })
-                .WithDescription("Shows information about the current game.")
-                .WithColor(Color.Gold)
-                .WithCurrentTimestamp();
-
-            embed
+            return CreateBaseEmbedBuilder("Infiltrator Game Info", "Shows information about the current game.")
                 .AddField("Running in channel", channel.Name)
                 .AddField("Started at", startTime)
                 .AddField("Player count", players.Count)
-                .AddField("Difficulty level", difficultyLevel);
+                .AddField("Difficulty level", difficultyLevel)
+                .Build();
+        }
 
-            return embed.Build();
+        public EmbedBuilder CreateBaseEmbedBuilder(string name, string description)
+        {
+            return new EmbedBuilder()
+                .WithAuthor(new EmbedAuthorBuilder()
+                {
+                    IconUrl = client.CurrentUser.GetAvatarUrl(),
+                    Name = name,
+                })
+                .WithDescription(description)
+                .WithColor(Color.Gold)
+                .WithCurrentTimestamp();
         }
     }
 }

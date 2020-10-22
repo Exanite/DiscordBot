@@ -1,7 +1,24 @@
-﻿namespace DiscordBot.Infiltrator
+﻿using Discord;
+using Discord.WebSocket;
+
+namespace DiscordBot.Infiltrator
 {
     public class InfiltratorGameManager
     {
-        public InfiltratorGame currentGame;
+        public InfiltratorGameManager(DiscordSocketClient client)
+        {
+            Client = client;
+        }
+
+        public InfiltratorGame CurrentGame { get; private set; }
+
+        public IDiscordClient Client { get; }
+
+        public InfiltratorGame CreateGame(ITextChannel channel)
+        {
+            CurrentGame = new InfiltratorGame(Client, channel);
+
+            return CurrentGame;
+        }
     }
 }
