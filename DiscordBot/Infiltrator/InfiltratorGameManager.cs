@@ -12,7 +12,7 @@ namespace DiscordBot.Infiltrator
 
         public InfiltratorGame CurrentGame { get; private set; }
 
-        public IDiscordClient Client { get; }
+        public DiscordSocketClient Client { get; }
 
         public InfiltratorGame CreateGame(ITextChannel channel)
         {

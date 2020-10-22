@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
+using DiscordBot.Extensions;
 
 namespace DiscordBot.Infiltrator
 {
     public class InfiltratorGame
     {
+        public static readonly IEmote attackEmote = new Emoji("⚔️");
+
         public List<Player> players = new List<Player>();
         public Enemy enemy;
         public IUserMessage enemyMessage;
@@ -15,13 +19,18 @@ namespace DiscordBot.Infiltrator
         public DateTimeOffset startTime;
         public IMessageChannel channel;
 
-        private readonly IDiscordClient client;
+        private readonly DiscordSocketClient client;
+        private readonly Random random;
 
-        public InfiltratorGame(IDiscordClient client, IMessageChannel channel)
+        public InfiltratorGame(DiscordSocketClient client, IMessageChannel channel)
         {
             this.client = client;
             this.channel = channel;
             this.startTime = DateTimeOffset.Now;
+
+            random = new Random(startTime.Millisecond);
+
+            client.ReactionAdded += OnReactionAdded;
         }
 
         public async Task Start()
@@ -29,10 +38,8 @@ namespace DiscordBot.Infiltrator
             enemy = new Enemy("Assassin", 10);
 
             enemyMessage = await channel.SendMessageAsync(embed: BuildEnemyEmbed());
-            await enemyMessage.AddReactionAsync(new Emoji("⚔️"));
-            await enemyMessage.AddReactionAsync(new Emoji("📋"));
-            await enemyMessage.AddReactionAsync(new Emoji("👜"));
-            await enemyMessage.AddReactionAsync(new Emoji("💨"));
+
+            enemyMessage.AddReactionAsync(attackEmote).Forget();
         }
 
         public Embed BuildEnemyEmbed()
@@ -64,6 +71,31 @@ namespace DiscordBot.Infiltrator
                 .WithDescription(description)
                 .WithColor(Color.Gold)
                 .WithCurrentTimestamp();
+        }
+
+        private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
+        {
+            if (this.channel.Id != channel.Id
+                || cacheable.Id != enemyMessage.Id
+                || reaction.User.GetValueOrDefault().IsBot)
+            {
+                return;
+            }
+
+            if (reaction.Emote.Name == attackEmote.Name)
+            {
+                enemy.health.value -= random.Next(1, 5);
+
+                enemyMessage.RemoveReactionAsync(reaction.Emote, reaction.User.GetValueOrDefault()).Forget();
+                enemyMessage.ModifyAsync(x => x.Embed = BuildEnemyEmbed()).Forget();
+
+                if (enemy.health.value <= 0)
+                {
+                    await channel.SendMessageAsync($"{enemy.name} has been defeated.");
+
+                    await Start();
+                }
+            }
         }
     }
 }
