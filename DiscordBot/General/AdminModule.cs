@@ -1,11 +1,11 @@
-﻿using Discord;
+﻿using System;
+using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.Net;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using DiscordBot.Extensions;
 
-namespace DiscordBot.Modules
+namespace DiscordBot.General
 {
     [Group("Admin")]
     [Summary("Commands used for administering the state of a Discord guild.")]
@@ -55,24 +55,19 @@ namespace DiscordBot.Modules
         [Command("DeleteMessages")]
         [Summary("Deletes a number of messages from the current channel.")]
         [RequireBotPermission(GuildPermission.ManageMessages), RequireUserPermission(GuildPermission.ManageMessages)]
-        public async Task ClearMessages(int number, IMessageChannel channel = null)
+        public async Task DeleteMessages(int number, ITextChannel channel = null)
         {
             if (channel == null)
             {
-                channel = Context.Channel;
+                channel = (ITextChannel)Context.Channel;
             }
 
-            var deleteTasks = new List<Task>(number);
             var messages = await channel.GetMessagesAsync(Context.Message, Direction.Before, number).FlattenAsync();
-            foreach (var message in messages)
-            {
-                var task = message.DeleteAsync();
-                deleteTasks.Add(task);
-            }
+            await channel.DeleteMessagesAsync(messages);
 
-            await Task.WhenAll(deleteTasks);
-
-            await Context.Channel.SendMessageAsync($"Successfully deleted {number} messages from '{channel.Name}'");
+            var reply = await Context.Channel.SendMessageAsync($"Successfully deleted {number} messages from '{channel.Name}'");
+            reply.DeleteAfterTime(TimeSpan.FromSeconds(3)).Forget();
+            Context.Message.DeleteAfterTime(TimeSpan.FromSeconds(3)).Forget();
         }
     }
 }

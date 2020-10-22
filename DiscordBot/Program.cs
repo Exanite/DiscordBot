@@ -1,6 +1,7 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 using DiscordBot.Configuration;
+using DiscordBot.Infiltrator;
 using DiscordBot.Json;
 using DiscordBot.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,12 +48,32 @@ namespace DiscordBot
             await Task.Delay(-1);
         }
 
+        public void Exit()
+        {
+            if (ServiceProvider != null)
+            {
+                var bot = ServiceProvider.GetService<DiscordBotService>();
+                bot.Stop().GetAwaiter().GetResult();
+            }
+
+            Environment.Exit(0);
+        }
+
         private IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+            InstallDiscordBot(services);
+            InstallInfiltratorGame(services);
+
+            return services.BuildServiceProvider();
+        }
+
+        private void InstallDiscordBot(ServiceCollection services)
         {
             var reader = new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, ConfigPath);
             var config = reader.Load(true);
 
-            var services = new ServiceCollection()
+            services
                 .AddSingleton(new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, ConfigPath))
                 .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig()
                 {
@@ -73,19 +94,11 @@ namespace DiscordBot
                 .AddSingleton<DiscordBotService>()
                 .AddSingleton(config)
                 .AddSingleton(reader);
-
-            return services.BuildServiceProvider();
         }
 
-        public void Exit()
+        private void InstallInfiltratorGame(ServiceCollection services)
         {
-            if (ServiceProvider != null)
-            {
-                var bot = ServiceProvider.GetService<DiscordBotService>();
-                bot.Stop().GetAwaiter().GetResult();
-            }
-
-            Environment.Exit(0);
+            services.AddSingleton<InfiltratorGameManager>();
         }
     }
 }

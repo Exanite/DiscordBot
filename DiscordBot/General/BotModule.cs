@@ -3,7 +3,7 @@ using Discord.Commands;
 using System;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Modules
+namespace DiscordBot.General
 {
     [Group("Bot")]
     [Summary("Commands for accessing or editing the state of this Discord bot.")]
