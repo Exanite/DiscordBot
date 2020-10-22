@@ -26,13 +26,13 @@ namespace DiscordBot.Configuration
         [Serializable]
         public class CommandsConfig
         {
-            public string Prefix { get; set; } = "!";
+            public string Prefix { get; set; } = "&";
             public bool CaseSensitive { get; set; } = false;
             [JsonConverter(typeof(StringEnumConverter))]
             public RunMode DefaultRunMode { get; set; } = RunMode.Async;
             public bool ShowErrorMessages { get; set; } = true;
             public bool DeleteErrorMessages { get; set; } = true;
-            public int ErrorMessageDeletionTime { get; set; } = 60;
+            public int ErrorMessageDeletionTime { get; set; } = 30;
         }
 
         [Serializable]
