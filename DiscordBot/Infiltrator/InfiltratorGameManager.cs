@@ -1,22 +1,21 @@
 ﻿using Discord;
-using Discord.WebSocket;
 
 namespace DiscordBot.Infiltrator
 {
     public class InfiltratorGameManager
     {
-        public InfiltratorGameManager(DiscordSocketClient client)
+        public InfiltratorGameManager(InfiltratorGameFactory gameFactory)
         {
-            Client = client;
+            GameFactory = gameFactory;
         }
 
         public InfiltratorGame CurrentGame { get; private set; }
 
-        public DiscordSocketClient Client { get; }
+        private InfiltratorGameFactory GameFactory { get; }
 
         public InfiltratorGame CreateGame(ITextChannel channel)
         {
-            CurrentGame = new InfiltratorGame(Client, channel);
+            CurrentGame = GameFactory.CreateGame(channel);
 
             return CurrentGame;
         }

@@ -92,13 +92,16 @@ namespace DiscordBot
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<LoggingService>()
                 .AddSingleton<DiscordBotService>()
+                .AddSingleton<EmbedHelper>()
                 .AddSingleton(config)
                 .AddSingleton(reader);
         }
 
         private void InstallInfiltratorGame(ServiceCollection services)
         {
-            services.AddSingleton<InfiltratorGameManager>();
+            services
+                .AddSingleton<InfiltratorGameManager>()
+                .AddSingleton<InfiltratorGameFactory>();
         }
     }
 }

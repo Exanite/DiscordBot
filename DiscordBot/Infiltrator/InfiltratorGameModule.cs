@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using DiscordBot.Extensions;
 
 namespace DiscordBot.Infiltrator
 {
@@ -20,10 +21,7 @@ namespace DiscordBot.Infiltrator
         public async Task StartGame()
         {
             await Context.Channel.SendMessageAsync("Starting a new game of Infiltrator.");
-
-            gameManager.CreateGame((ITextChannel)Context.Channel);
-
-            await gameManager.CurrentGame.Start();
+            gameManager.CreateGame((ITextChannel)Context.Channel).Start().Forget();
         }
 
         [Command("Current")]

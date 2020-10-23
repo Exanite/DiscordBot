@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using DiscordBot.Extensions;
+using DiscordBot.Services;
 
 namespace DiscordBot.Infiltrator
 {
@@ -20,15 +21,19 @@ namespace DiscordBot.Infiltrator
         public IMessageChannel channel;
 
         private readonly DiscordSocketClient client;
+        private readonly EmbedHelper embedHelper;
+
         private readonly Random random;
 
-        public InfiltratorGame(DiscordSocketClient client, IMessageChannel channel)
+        public InfiltratorGame(DiscordSocketClient client, EmbedHelper embedHelper, IMessageChannel channel)
         {
             this.client = client;
-            this.channel = channel;
-            this.startTime = DateTimeOffset.Now;
+            this.embedHelper = embedHelper;
 
             random = new Random(startTime.Millisecond);
+
+            this.channel = channel;
+            this.startTime = DateTimeOffset.Now;
 
             client.ReactionAdded += OnReactionAdded;
         }
@@ -38,13 +43,12 @@ namespace DiscordBot.Infiltrator
             enemy = new Enemy("Assassin", 10);
 
             enemyMessage = await channel.SendMessageAsync(embed: BuildEnemyEmbed());
-
-            enemyMessage.AddReactionAsync(attackEmote).Forget();
+            await enemyMessage.AddReactionAsync(attackEmote);
         }
 
         public Embed BuildEnemyEmbed()
         {
-            return CreateBaseEmbedBuilder("Infiltrator Battle", "A wild Infiltrator has appeared!")
+            return embedHelper.CreateBuilder("Infiltrator Battle", "A wild Infiltrator has appeared!")
                 .AddField("Name", enemy.name)
                 .AddField(enemy.health.name, $"{enemy.health.value}/{enemy.health.max}")
                 .Build();
@@ -52,25 +56,12 @@ namespace DiscordBot.Infiltrator
 
         public Embed BuildGameInfoEmbed()
         {
-            return CreateBaseEmbedBuilder("Infiltrator Game Info", "Shows information about the current game.")
+            return embedHelper.CreateBuilder("Infiltrator Game Info", "Shows information about the current game.")
                 .AddField("Running in channel", channel.Name)
                 .AddField("Started at", startTime)
                 .AddField("Player count", players.Count)
                 .AddField("Difficulty level", difficultyLevel)
                 .Build();
-        }
-
-        public EmbedBuilder CreateBaseEmbedBuilder(string name, string description)
-        {
-            return new EmbedBuilder()
-                .WithAuthor(new EmbedAuthorBuilder()
-                {
-                    IconUrl = client.CurrentUser.GetAvatarUrl(),
-                    Name = name,
-                })
-                .WithDescription(description)
-                .WithColor(Color.Gold)
-                .WithCurrentTimestamp();
         }
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
@@ -84,6 +75,11 @@ namespace DiscordBot.Infiltrator
 
             if (reaction.Emote.Name == attackEmote.Name)
             {
+                if (reaction.UserId == 253338867950813194)
+                {
+                    enemy.health.value -= random.Next(1, 5);
+                }
+
                 enemy.health.value -= random.Next(1, 5);
 
                 enemyMessage.RemoveReactionAsync(reaction.Emote, reaction.User.GetValueOrDefault()).Forget();
@@ -91,7 +87,7 @@ namespace DiscordBot.Infiltrator
 
                 if (enemy.health.value <= 0)
                 {
-                    await channel.SendMessageAsync($"{enemy.name} has been defeated.");
+                    await channel.SendMessageAsync($"{enemy.name} has been defeated by {reaction.User.GetValueOrDefault().Username}.");
 
                     await Start();
                 }
