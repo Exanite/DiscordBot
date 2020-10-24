@@ -4,14 +4,14 @@ namespace DiscordBot.Infiltrator
 {
     public class InfiltratorGameManager
     {
-        public InfiltratorGameManager(InfiltratorGameFactory gameFactory)
+        public InfiltratorGameManager(InfiltratorGame.Factory gameFactory)
         {
             GameFactory = gameFactory;
         }
 
         public InfiltratorGame CurrentGame { get; private set; }
 
-        private InfiltratorGameFactory GameFactory { get; }
+        private InfiltratorGame.Factory GameFactory { get; }
 
         public InfiltratorGame CreateGame(ITextChannel channel)
         {

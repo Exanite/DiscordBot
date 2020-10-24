@@ -8,7 +8,7 @@ using DiscordBot.Services;
 
 namespace DiscordBot.Infiltrator
 {
-    public class InfiltratorGame
+    public partial class InfiltratorGame
     {
         public static readonly IEmote attackEmote = new Emoji("⚔️");
 
