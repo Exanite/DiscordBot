@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DiscordBot.Services;
 
 namespace DiscordBot.Infiltrator
 {
@@ -85,21 +86,31 @@ namespace DiscordBot.Infiltrator
                 "Virus",
             };
 
-            private readonly Random random = new Random();
+            public Factory(EmbedHelper embedHelper, Random random)
+            {
+                EmbedHelper = embedHelper;
+                Random = random;
+            }
+
+            private EmbedHelper EmbedHelper { get; }
+            private Random Random { get; }
 
             public Enemy Create(InfiltratorGame game)
             {
-                int nameIndex = random.Next(0, EnemyNames.Count);
+                int nameIndex = Random.Next(0, EnemyNames.Count);
 
-                return new Enemy(GetRandomName(), 10);
+                var enemy = new Enemy(EmbedHelper, Random);
+                enemy.Construct(GetRandomName(), 10);
+
+                return enemy;
             }
 
             public string GetRandomName()
             {
-                int prefixIndex = random.Next(0, PrefixNames.Count);
-                int suffixIndex = random.Next(0, SuffixNames.Count);
+                int prefixIndex = Random.Next(0, PrefixNames.Count);
+                int suffixIndex = Random.Next(0, SuffixNames.Count);
 
-                int nameIndex = random.Next(0, EnemyNames.Count);
+                int nameIndex = Random.Next(0, EnemyNames.Count);
 
                 return $"{PrefixNames[prefixIndex]} {EnemyNames[nameIndex]} {SuffixNames[suffixIndex]}";
             }

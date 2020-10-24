@@ -13,53 +13,47 @@ namespace DiscordBot.Infiltrator
         public static readonly IEmote attackEmote = new Emoji("⚔️");
 
         public List<Player> players = new List<Player>();
+
         public Enemy enemy;
         public IUserMessage enemyMessage;
-        public int difficultyLevel = 0;
 
+        public int difficultyLevel = 0;
         public DateTimeOffset startTime;
         public IMessageChannel channel;
 
-        private readonly DiscordSocketClient client;
-        private readonly EmbedHelper embedHelper;
-        private readonly Enemy.Factory enemyFactory;
-
-        private readonly Random random;
+        private DiscordSocketClient Client { get; }
+        private EmbedHelper EmbedHelper { get; }
+        private Enemy.Factory EnemyFactory { get; }
 
         public InfiltratorGame(DiscordSocketClient client, EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
         {
-            this.client = client;
-            this.embedHelper = embedHelper;
-            this.enemyFactory = enemyFactory;
-
-            random = new Random(startTime.Millisecond);
+            Client = client;
+            EmbedHelper = embedHelper;
+            EnemyFactory = enemyFactory;
 
             this.channel = channel;
-            this.startTime = DateTimeOffset.Now;
+            startTime = DateTimeOffset.Now;
 
             client.ReactionAdded += OnReactionAdded;
         }
 
-        public async Task Start()
+        public async Task CreateAndShowNewEnemy() // todo split into different methods
         {
-            enemy = enemyFactory.Create(this);
+            if (enemy != null)
+            {
+                enemyMessage.RemoveAllReactionsAsync().Forget();
+            }
 
-            enemyMessage = await channel.SendMessageAsync(embed: BuildEnemyEmbed());
+            enemy = EnemyFactory.Create(this);
+
+            enemyMessage = await channel.SendMessageAsync(embed: enemy.ToEmbed());
             await enemyMessage.AddReactionAsync(attackEmote);
         }
 
-        public Embed BuildEnemyEmbed()
+        public Embed ToEmbed()
         {
-            return embedHelper.CreateBuilder("Infiltrator Battle", "A wild Infiltrator has appeared!")
-                .AddField("Name", enemy.name)
-                .AddField(enemy.health.name, $"{enemy.health.value}/{enemy.health.max}")
-                .Build();
-        }
-
-        public Embed BuildGameInfoEmbed()
-        {
-            return embedHelper.CreateBuilder("Infiltrator Game Info", "Shows information about the current game.")
-                .AddField("Running in channel", channel.Name)
+            return EmbedHelper.CreateBuilder("Infiltrator Game Info", "Shows information about the current game.")
+                .AddField("Running in", channel.Name)
                 .AddField("Started at", startTime)
                 .AddField("Player count", players.Count)
                 .AddField("Difficulty level", difficultyLevel)
@@ -77,21 +71,16 @@ namespace DiscordBot.Infiltrator
 
             if (reaction.Emote.Name == attackEmote.Name)
             {
-                if (reaction.UserId == 253338867950813194)
-                {
-                    enemy.health.value -= random.Next(1, 5);
-                }
+                enemy.OnAttacked(this, null); // ! use Player reference instead of null
 
-                enemy.health.value -= random.Next(1, 5);
-
-                enemyMessage.RemoveReactionAsync(reaction.Emote, reaction.User.GetValueOrDefault()).Forget();
-                enemyMessage.ModifyAsync(x => x.Embed = BuildEnemyEmbed()).Forget();
+                await Task.WhenAll(
+                    enemyMessage.ModifyAsync(x => x.Embed = enemy.ToEmbed()),
+                    enemyMessage.RemoveReactionAsync(reaction.Emote, reaction.User.GetValueOrDefault()));
 
                 if (enemy.health.value <= 0)
                 {
                     await channel.SendMessageAsync($"{enemy.name} has been defeated by {reaction.User.GetValueOrDefault().Username}.");
-
-                    await Start();
+                    await CreateAndShowNewEnemy();
                 }
             }
         }

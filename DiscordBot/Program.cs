@@ -64,6 +64,7 @@ namespace DiscordBot
             var services = new ServiceCollection();
             InstallDiscordBot(services);
             InstallInfiltratorGame(services);
+            InstallMiscellaneous(services);
 
             return services.BuildServiceProvider();
         }
@@ -103,6 +104,12 @@ namespace DiscordBot
                 .AddSingleton<InfiltratorGameManager>()
                 .AddSingleton<InfiltratorGame.Factory>()
                 .AddSingleton<Enemy.Factory>();
+        }
+
+        private void InstallMiscellaneous(ServiceCollection services)
+        {
+            services
+                .AddSingleton<Random>();
         }
     }
 }
