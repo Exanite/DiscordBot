@@ -22,13 +22,15 @@ namespace DiscordBot.Infiltrator
 
         private readonly DiscordSocketClient client;
         private readonly EmbedHelper embedHelper;
+        private readonly Enemy.Factory enemyFactory;
 
         private readonly Random random;
 
-        public InfiltratorGame(DiscordSocketClient client, EmbedHelper embedHelper, IMessageChannel channel)
+        public InfiltratorGame(DiscordSocketClient client, EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
         {
             this.client = client;
             this.embedHelper = embedHelper;
+            this.enemyFactory = enemyFactory;
 
             random = new Random(startTime.Millisecond);
 
@@ -40,7 +42,7 @@ namespace DiscordBot.Infiltrator
 
         public async Task Start()
         {
-            enemy = new Enemy("Assassin", 10);
+            enemy = enemyFactory.Create(this);
 
             enemyMessage = await channel.SendMessageAsync(embed: BuildEnemyEmbed());
             await enemyMessage.AddReactionAsync(attackEmote);

@@ -1,6 +1,6 @@
 ﻿namespace DiscordBot.Infiltrator
 {
-    public class Enemy
+    public partial class Enemy
     {
         public string name;
         public Stat health;

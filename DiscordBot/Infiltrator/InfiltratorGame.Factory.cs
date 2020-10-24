@@ -8,18 +8,20 @@ namespace DiscordBot.Infiltrator
     {
         public class Factory
         {
-            public Factory(DiscordSocketClient client, EmbedHelper embedHelper)
+            public Factory(DiscordSocketClient client, EmbedHelper embedHelper, Enemy.Factory enemyFactory)
             {
                 Client = client;
                 EmbedHelper = embedHelper;
+                EnemyFactory = enemyFactory;
             }
 
             private DiscordSocketClient Client { get; }
             private EmbedHelper EmbedHelper { get; }
+            private Enemy.Factory EnemyFactory { get; }
 
             public InfiltratorGame CreateGame(ITextChannel channel)
             {
-                return new InfiltratorGame(Client, EmbedHelper, channel);
+                return new InfiltratorGame(Client, EmbedHelper, EnemyFactory, channel);
             }
         }
     }

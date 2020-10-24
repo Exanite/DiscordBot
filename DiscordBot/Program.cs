@@ -101,7 +101,8 @@ namespace DiscordBot
         {
             services
                 .AddSingleton<InfiltratorGameManager>()
-                .AddSingleton<InfiltratorGame.Factory>();
+                .AddSingleton<InfiltratorGame.Factory>()
+                .AddSingleton<Enemy.Factory>();
         }
     }
 }
