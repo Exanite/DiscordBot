@@ -25,16 +25,13 @@ namespace DiscordBot.Infiltrator
         private EmbedHelper EmbedHelper { get; }
         private Enemy.Factory EnemyFactory { get; }
 
-        public InfiltratorGame(DiscordSocketClient client, EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
+        public InfiltratorGame(EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
         {
-            Client = client;
             EmbedHelper = embedHelper;
             EnemyFactory = enemyFactory;
 
             this.channel = channel;
             startTime = DateTimeOffset.Now;
-
-            client.ReactionAdded += OnReactionAdded;
         }
 
         public async Task CreateAndShowNewEnemy() // todo split into different methods
@@ -60,7 +57,7 @@ namespace DiscordBot.Infiltrator
                 .Build();
         }
 
-        private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
+        public async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
         {
             if (this.channel.Id != channel.Id
                 || cacheable.Id != enemyMessage.Id
