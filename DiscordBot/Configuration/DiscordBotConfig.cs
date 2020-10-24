@@ -18,7 +18,7 @@ namespace DiscordBot.Configuration
         [Serializable]
         public class LogConfig
         {
-            public string LocalLogFolderPath { get; set; } = @"Logs";
+            public string RelativeLogFolderPath { get; set; } = @"Logs";
             [JsonConverter(typeof(StringEnumConverter))]
             public LogSeverity LogLevel { get; set; } = LogSeverity.Verbose;
         }
@@ -32,7 +32,7 @@ namespace DiscordBot.Configuration
             public RunMode DefaultRunMode { get; set; } = RunMode.Async;
             public bool ShowErrorMessages { get; set; } = true;
             public bool DeleteErrorMessages { get; set; } = true;
-            public int ErrorMessageDeletionTime { get; set; } = 30;
+            public int ErrorMessageDeletionTime { get; set; } = 10;
         }
 
         [Serializable]
