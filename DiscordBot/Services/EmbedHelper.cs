@@ -12,7 +12,7 @@ namespace DiscordBot.Services
             Client = client;
         }
 
-        public DiscordSocketClient Client { get; }
+        private DiscordSocketClient Client { get; }
 
         public EmbedBuilder CreateBuilder(string name, string description)
         {
