@@ -28,7 +28,7 @@ namespace DiscordBot.Services
 
         public async Task Start()
         {
-            if (String.IsNullOrEmpty(config.DiscordToken))
+            if (string.IsNullOrEmpty(config.DiscordToken))
             {
                 throw new Exception($"Please enter a Discord Bot token into the config file at {Program.ConfigPath}");
             }
