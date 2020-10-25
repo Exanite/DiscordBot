@@ -12,7 +12,7 @@ namespace DiscordBot.Infiltrator
     {
         public static readonly IEmote attackEmote = new Emoji("⚔️");
 
-        public List<Player> players = new List<Player>();
+        public Dictionary<ulong, Player> playersById = new Dictionary<ulong, Player>();
 
         public Enemy enemy;
         public IUserMessage enemyMessage;
@@ -52,7 +52,7 @@ namespace DiscordBot.Infiltrator
             return EmbedHelper.CreateBuilder("Infiltrator Game Info", "Shows information about the current game.")
                 .AddField("Running in", channel.Name)
                 .AddField("Started at", startTime)
-                .AddField("Player count", players.Count)
+                .AddField("Player count", playersById.Count)
                 .AddField("Difficulty level", difficultyLevel)
                 .Build();
         }
@@ -68,7 +68,13 @@ namespace DiscordBot.Infiltrator
 
             if (reaction.Emote.Name == attackEmote.Name)
             {
-                enemy.OnAttacked(this, null); // ! use Player reference instead of null
+                if (!playersById.TryGetValue(reaction.UserId, out Player player))
+                {
+                    player = new Player(reaction.User.GetValueOrDefault());
+                    playersById.Add(player.Id, player);
+                }
+
+                enemy.OnAttacked(this, player);
 
                 await Task.WhenAll(
                     enemyMessage.ModifyAsync(x => x.Embed = enemy.ToEmbed()),
@@ -76,7 +82,7 @@ namespace DiscordBot.Infiltrator
 
                 if (enemy.health.value <= 0)
                 {
-                    await channel.SendMessageAsync($"{enemy.name} has been defeated by {reaction.User.GetValueOrDefault().Username}.");
+                    await channel.SendMessageAsync($"{enemy.name} has been defeated by {player}.");
                     await CreateAndShowNewEnemy();
                 }
             }
