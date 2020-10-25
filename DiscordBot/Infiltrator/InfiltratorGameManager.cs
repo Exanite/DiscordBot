@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.WebSocket;
 
 namespace DiscordBot.Infiltrator
 {
@@ -13,7 +14,7 @@ namespace DiscordBot.Infiltrator
         public InfiltratorGame CurrentGame { get; private set; }
 
         private InfiltratorGame.Factory GameFactory { get; }
-        public DiscordSocketClient Client { get; }
+        private DiscordSocketClient Client { get; }
 
         public InfiltratorGame CreateGame(ITextChannel channel)
         {
