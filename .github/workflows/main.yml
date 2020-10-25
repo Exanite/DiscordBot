@@ -30,3 +30,7 @@ jobs:
     # Test
     - run: dotnet test --no-restore --verbosity normal
     # Upload
+    - uses: actions/upload-artifact@v2.1.4
+      with:
+        name: Build
+        path: DiscordBot\bin\Release\netcoreapp2.0
