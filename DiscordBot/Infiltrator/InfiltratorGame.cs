@@ -11,7 +11,7 @@ namespace DiscordBot.Infiltrator
     public partial class InfiltratorGame
     {
         public static readonly IEmote attackEmote = new Emoji("⚔️");
-        
+
         public Dictionary<ulong, Player> playersById = new Dictionary<ulong, Player>();
 
         public Enemy enemy;
@@ -49,7 +49,7 @@ namespace DiscordBot.Infiltrator
 
         public Embed ToEmbed()
         {
-            return EmbedHelper.CreateBuilder("Infiltrator Game Info", "Shows information about the current game.")
+            return EmbedHelper.CreateBuilder("[Infiltrator Game Info]", "Shows information about the current game.")
                 .AddField("Running in", channel.Name)
                 .AddField("Started at", startTime)
                 .AddField("Player count", playersById.Count)
