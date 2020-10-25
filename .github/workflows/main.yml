@@ -26,11 +26,11 @@ jobs:
     # Install dependencies
     - run: dotnet restore
     # Build
-    - run: dotnet build --configuration Release --no-restore
+    - run: dotnet publish -c Release -r win10-x64 -p:PublishProfile=FolderProfile --no-restore
     # Test
     - run: dotnet test --no-restore --verbosity normal
     # Upload
     - uses: actions/upload-artifact@v2.1.4
       with:
         name: Build
-        path: DiscordBot/bin/Release
+        path: DiscordBot/bin/Release/netcoreapp2.0/publish
