@@ -11,7 +11,7 @@ namespace DiscordBot.Infiltrator
     public partial class InfiltratorGame
     {
         public static readonly IEmote attackEmote = new Emoji("⚔️");
-
+        
         public Dictionary<ulong, Player> playersById = new Dictionary<ulong, Player>();
 
         public Enemy enemy;
