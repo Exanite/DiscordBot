@@ -50,7 +50,7 @@ namespace DiscordBot.General
         private async Task ListAllModules()
         {
             var builder = EmbedHelper.CreateBuilder($"[All Modules]",
-                "Use '&help <module name>' to show information about a specific module", Color.Green);
+                $"Use '{Config.Commands.Prefix}Help <moduleName>' to show information about a specific module.", Color.Green);
 
             foreach (var module in Commands.Modules)
             {

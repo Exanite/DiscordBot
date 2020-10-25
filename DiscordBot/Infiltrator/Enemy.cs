@@ -41,7 +41,7 @@ namespace DiscordBot.Infiltrator
 
         public Embed ToEmbed()
         {
-            return EmbedHelper.CreateBuilder("Infiltrator Battle", lastActionMessage)
+            return EmbedHelper.CreateBuilder("[Infiltrator Battle]", lastActionMessage)
                 .AddField("Name", name)
                 .AddField(health.name, $"{health.value}/{health.max}")
                 .Build();
