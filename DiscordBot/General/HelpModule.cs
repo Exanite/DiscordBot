@@ -25,14 +25,14 @@ namespace DiscordBot.General
         private EmbedHelper EmbedHelper { get; }
 
         [Command("Help")]
-        [Summary("Shows all modules and their commands.")]
+        [Summary("Shows information about all modules.")]
         public async Task Help()
         {
             await ListAllModules();
         }
 
         [Command("Help")]
-        [Summary("Shows the specified modules and its commands.")]
+        [Summary("Shows information about the specified module and its commands.")]
         public async Task Help(string moduleName)
         {
             var module = Commands.Modules.Where(x => string.Equals(x.Name, moduleName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
@@ -49,10 +49,14 @@ namespace DiscordBot.General
 
         private async Task ListAllModules()
         {
+            var builder = EmbedHelper.CreateBuilder($"[All Modules]", null, Color.Green);
+
             foreach (var module in Commands.Modules)
             {
-                await ListModule(module);
+                builder.AddField(module.Name, module.Summary);
             }
+
+            await Context.Channel.SendMessageAsync(embed: builder.Build());
         }
 
         private async Task ListModule(ModuleInfo module)
