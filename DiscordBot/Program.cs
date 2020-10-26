@@ -7,8 +7,12 @@ using Discord.WebSocket;
 using DiscordBot.Configuration;
 using DiscordBot.Infiltrator;
 using DiscordBot.Json;
+using DiscordBot.Logging;
+using DiscordBot.Logging.Discord;
+using DiscordBot.Logging.Serilog;
 using DiscordBot.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace DiscordBot
 {
@@ -45,7 +49,7 @@ namespace DiscordBot
             Container = CreateContainer();
 
             Container.Resolve<CommandHandler>();
-            Container.Resolve<LoggingService>();
+            Container.Resolve<DiscordLoggingService>();
             await Container.Resolve<DiscordBotService>().Start();
 
             await Task.Delay(-1);
@@ -67,6 +71,7 @@ namespace DiscordBot
             var builder = new ContainerBuilder();
 
             InstallProgram(builder);
+            InstallLog(builder);
             InstallDiscordBot(builder);
             InstallInfiltratorGame(builder);
             InstallMiscellaneous(builder);
@@ -79,6 +84,15 @@ namespace DiscordBot
             builder.Populate(new ServiceCollection());
         }
 
+        private void InstallLog(ContainerBuilder builder)
+        {
+            builder.RegisterType<LoggingService>().SingleInstance();
+            builder.Register(x => x.Resolve<LoggingService>().Logger).As<ILogger>().SingleInstance();
+
+            builder.RegisterType<SerilogLogAdapter>().As<ILog>();
+            builder.RegisterGeneric(typeof(SerilogLogAdapter<>)).As(typeof(ILog<>)).SingleInstance();
+        }
+
         private void InstallDiscordBot(ContainerBuilder builder)
         {
             var reader = new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, ConfigPath);
@@ -86,7 +100,7 @@ namespace DiscordBot
 
             var client = new DiscordSocketClient(new DiscordSocketConfig()
             {
-                LogLevel = config.Log.LogLevel,
+                LogLevel = config.Log.LogLevel.ToLogSeverity(),
                 MessageCacheSize = config.Socket.MessageCacheSize,
                 AlwaysDownloadUsers = config.Socket.AlwaysDownloadUsers,
                 ConnectionTimeout = config.Socket.ConnectionTimeOut,
@@ -95,7 +109,7 @@ namespace DiscordBot
 
             var commandService = new CommandService(new CommandServiceConfig
             {
-                LogLevel = config.Log.LogLevel,
+                LogLevel = config.Log.LogLevel.ToLogSeverity(),
                 CaseSensitiveCommands = config.Commands.CaseSensitive,
                 DefaultRunMode = config.Commands.DefaultRunMode,
             });
@@ -106,8 +120,8 @@ namespace DiscordBot
             builder.RegisterInstance(client).SingleInstance();
             builder.RegisterInstance(commandService).SingleInstance();
 
+            builder.RegisterType<DiscordLoggingService>().SingleInstance();
             builder.RegisterType<CommandHandler>().SingleInstance();
-            builder.RegisterType<LoggingService>().SingleInstance();
             builder.RegisterType<DiscordBotService>().SingleInstance();
             builder.RegisterType<EmbedHelper>().SingleInstance();
         }
@@ -125,4 +139,3 @@ namespace DiscordBot
         }
     }
 }
-

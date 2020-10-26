@@ -1,11 +1,12 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using DiscordBot.Configuration;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using DiscordBot.Configuration;
+using DiscordBot.Logging;
 
 namespace DiscordBot.Services
 {
@@ -15,9 +16,9 @@ namespace DiscordBot.Services
         private readonly DiscordSocketClient client;
         private readonly CommandService commands;
         private readonly DiscordBotConfig config;
-        private readonly LoggingService log;
+        private readonly ILog log;
 
-        public DiscordBotService(IServiceProvider provider, DiscordSocketClient client, CommandService commands, DiscordBotConfig config, LoggingService log)
+        public DiscordBotService(IServiceProvider provider, DiscordSocketClient client, CommandService commands, DiscordBotConfig config, ILog<DiscordBotService> log)
         {
             this.provider = provider;
             this.client = client;
@@ -40,7 +41,7 @@ namespace DiscordBot.Services
             }
             catch (HttpRequestException)
             {
-                await log.Log(new LogMessage(LogSeverity.Error, "Discord", "Unable to connect to Discord servers."));
+                log.Fatal("Unable to connect to Discord servers.");
             }
 
             await commands.AddModulesAsync(Assembly.GetExecutingAssembly(), provider);
