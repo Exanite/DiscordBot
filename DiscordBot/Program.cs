@@ -113,7 +113,9 @@ namespace DiscordBot
 
         private void WriteToConsole(LoggerConfiguration config, string outputTemplate)
         {
-            config.WriteTo.Console(new MessageTemplateTextFormatter(outputTemplate));
+            var textFormatter = new MessageTemplateTextFormatter(outputTemplate);
+
+            config.WriteTo.ColoredConsole(textFormatter);
         }
 
         private void WriteToFile(LoggerConfiguration config, string path, string outputTemplate)
