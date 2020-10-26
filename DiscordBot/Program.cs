@@ -1,12 +1,14 @@
-﻿using Discord.Commands;
+﻿using System;
+using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Discord.Commands;
 using Discord.WebSocket;
 using DiscordBot.Configuration;
 using DiscordBot.Infiltrator;
 using DiscordBot.Json;
 using DiscordBot.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
 
 namespace DiscordBot
 {
@@ -14,7 +16,7 @@ namespace DiscordBot
     {
         public const string ConfigPath = @"Configs\DiscordBot\Config.json";
 
-        private IServiceProvider ServiceProvider { get; set; }
+        private IContainer Container { get; set; }
 
         public static void Main()
         {
@@ -40,76 +42,86 @@ namespace DiscordBot
 
         public async Task MainAsync()
         {
-            ServiceProvider = ConfigureServices();
-            ServiceProvider.GetRequiredService<CommandHandler>();
-            ServiceProvider.GetRequiredService<LoggingService>();
-            await ServiceProvider.GetRequiredService<DiscordBotService>().Start();
+            Container = CreateContainer();
+
+            Container.Resolve<CommandHandler>();
+            Container.Resolve<LoggingService>();
+            await Container.Resolve<DiscordBotService>().Start();
 
             await Task.Delay(-1);
         }
 
         public void Exit()
         {
-            if (ServiceProvider != null)
+            if (Container != null)
             {
-                var bot = ServiceProvider.GetService<DiscordBotService>();
+                var bot = Container.Resolve<DiscordBotService>();
                 bot.Stop().GetAwaiter().GetResult();
             }
 
             Environment.Exit(0);
         }
 
-        private IServiceProvider ConfigureServices()
+        private IContainer CreateContainer()
         {
-            var services = new ServiceCollection();
-            InstallDiscordBot(services);
-            InstallInfiltratorGame(services);
-            InstallMiscellaneous(services);
+            var builder = new ContainerBuilder();
 
-            return services.BuildServiceProvider();
+            InstallProgram(builder);
+            InstallDiscordBot(builder);
+            InstallInfiltratorGame(builder);
+            InstallMiscellaneous(builder);
+
+            return builder.Build();
         }
 
-        private void InstallDiscordBot(ServiceCollection services)
+        private void InstallProgram(ContainerBuilder builder)
+        {
+            builder.Populate(new ServiceCollection());
+        }
+
+        private void InstallDiscordBot(ContainerBuilder builder)
         {
             var reader = new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, ConfigPath);
             var config = reader.Load(true);
 
-            services
-                .AddSingleton(new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, ConfigPath))
-                .AddSingleton(new DiscordSocketClient(new DiscordSocketConfig()
-                {
-                    LogLevel = config.Log.LogLevel,
-                    MessageCacheSize = config.Socket.MessageCacheSize,
-                    AlwaysDownloadUsers = config.Socket.AlwaysDownloadUsers,
-                    ConnectionTimeout = config.Socket.ConnectionTimeOut,
-                    DefaultRetryMode = config.Socket.DefaultRetryMode,
-                }))
-                .AddSingleton(new CommandService(new CommandServiceConfig
-                {
-                    LogLevel = config.Log.LogLevel,
-                    CaseSensitiveCommands = config.Commands.CaseSensitive,
-                    DefaultRunMode = config.Commands.DefaultRunMode,
-                }))
-                .AddSingleton<CommandHandler>()
-                .AddSingleton<LoggingService>()
-                .AddSingleton<DiscordBotService>()
-                .AddSingleton<EmbedHelper>()
-                .AddSingleton(config)
-                .AddSingleton(reader);
+            var client = new DiscordSocketClient(new DiscordSocketConfig()
+            {
+                LogLevel = config.Log.LogLevel,
+                MessageCacheSize = config.Socket.MessageCacheSize,
+                AlwaysDownloadUsers = config.Socket.AlwaysDownloadUsers,
+                ConnectionTimeout = config.Socket.ConnectionTimeOut,
+                DefaultRetryMode = config.Socket.DefaultRetryMode,
+            });
+
+            var commandService = new CommandService(new CommandServiceConfig
+            {
+                LogLevel = config.Log.LogLevel,
+                CaseSensitiveCommands = config.Commands.CaseSensitive,
+                DefaultRunMode = config.Commands.DefaultRunMode,
+            });
+
+            builder.RegisterInstance(config).SingleInstance();
+            builder.RegisterInstance(reader).SingleInstance();
+
+            builder.RegisterInstance(client).SingleInstance();
+            builder.RegisterInstance(commandService).SingleInstance();
+
+            builder.RegisterType<CommandHandler>().SingleInstance();
+            builder.RegisterType<LoggingService>().SingleInstance();
+            builder.RegisterType<DiscordBotService>().SingleInstance();
+            builder.RegisterType<EmbedHelper>().SingleInstance();
         }
 
-        private void InstallInfiltratorGame(ServiceCollection services)
+        private void InstallInfiltratorGame(ContainerBuilder builder)
         {
-            services
-                .AddSingleton<InfiltratorGameManager>()
-                .AddSingleton<InfiltratorGame.Factory>()
-                .AddSingleton<Enemy.Factory>();
+            builder.RegisterType<InfiltratorGameManager>().SingleInstance();
+            builder.RegisterType<InfiltratorGame.Factory>().SingleInstance();
+            builder.RegisterType<Enemy.Factory>().SingleInstance();
         }
 
-        private void InstallMiscellaneous(ServiceCollection services)
+        private void InstallMiscellaneous(ContainerBuilder builder)
         {
-            services
-                .AddSingleton<Random>();
+            builder.RegisterType<Random>().SingleInstance();
         }
     }
 }
