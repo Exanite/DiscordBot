@@ -24,7 +24,7 @@ namespace DiscordBot.Services
 
         private string LogFileName { get; set; }
 
-        private string LogFolderPath => Path.Combine(AppContext.BaseDirectory, Config.Log.RelativeLogFolderPath);
+        private string LogFolderPath => Config.Log.LogFolderPath;
         private string LogFilePath => Path.Combine(LogFolderPath, LogFileName);
 
         private DiscordSocketClient Client { get; }
