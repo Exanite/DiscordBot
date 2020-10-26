@@ -18,7 +18,7 @@ namespace DiscordBot.Configuration
         [Serializable]
         public class LogConfig
         {
-            public string RelativeLogFolderPath { get; set; } = @"Logs";
+            public string LogFolderPath { get; set; } = @"Logs";
             [JsonConverter(typeof(StringEnumConverter))]
             public LogSeverity LogLevel { get; set; } = LogSeverity.Verbose;
         }
