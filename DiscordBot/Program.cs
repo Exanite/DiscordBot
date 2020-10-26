@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -13,10 +12,6 @@ using DiscordBot.Logging.Serilog;
 using DiscordBot.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Serilog.Core;
-using Serilog.Events;
-using Serilog.Formatting.Display;
-using Serilog.Formatting.Json;
 
 namespace DiscordBot
 {
@@ -53,7 +48,6 @@ namespace DiscordBot
             Container = CreateContainer();
 
             Container.Resolve<CommandHandler>();
-            Container.Resolve<LoggingService>();
             await Container.Resolve<DiscordBotService>().Start();
 
             await Task.Delay(-1);
@@ -90,41 +84,11 @@ namespace DiscordBot
 
         private void InstallLog(ContainerBuilder builder)
         {
-            string outputTemplate = "[{Timestamp:HH:mm:ss}] [{Level}] [{ShortContext}]: {Message:lj}{NewLine}{Exception}";
-            string path = Path.Combine("Logs", "TheLog.log");
+            builder.RegisterType<LoggingService>().SingleInstance();
+            builder.Register(x => x.Resolve<LoggingService>().Logger).As<ILogger>().SingleInstance();
 
-            var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Verbose);
-
-            var config = new LoggerConfiguration()
-                .Enrich.WithProperty("SourceContext", "Default")
-                .Enrich.With<ShortContextEnricher>()
-                .Enrich.WithThreadId()
-                .Enrich.WithThreadName()
-                .MinimumLevel.ControlledBy(levelSwitch);
-
-            WriteToFile(config, path, outputTemplate);
-            WriteToConsole(config, outputTemplate);
-
-            var log = config.CreateLogger();
-
-            builder.RegisterInstance(log).As<ILogger>().SingleInstance();
+            builder.RegisterType<SerilogLogAdapter>().As<ILog>();
             builder.RegisterGeneric(typeof(SerilogLogAdapter<>)).As(typeof(ILog<>)).SingleInstance();
-        }
-
-        private void WriteToConsole(LoggerConfiguration config, string outputTemplate)
-        {
-            var textFormatter = new MessageTemplateTextFormatter(outputTemplate);
-
-            config.WriteTo.ColoredConsole(textFormatter);
-        }
-
-        private void WriteToFile(LoggerConfiguration config, string path, string outputTemplate)
-        {
-            var textFormatter = new MessageTemplateTextFormatter(outputTemplate);
-            var jsonFormatter = new JsonFormatter();
-
-            config.WriteTo.File(textFormatter, path);
-            config.WriteTo.File(jsonFormatter, $"{path}.json");
         }
 
         private void InstallDiscordBot(ContainerBuilder builder)
@@ -155,7 +119,6 @@ namespace DiscordBot
             builder.RegisterInstance(commandService).SingleInstance();
 
             builder.RegisterType<CommandHandler>().SingleInstance();
-            builder.RegisterType<LoggingService>().SingleInstance();
             builder.RegisterType<DiscordBotService>().SingleInstance();
             builder.RegisterType<EmbedHelper>().SingleInstance();
         }

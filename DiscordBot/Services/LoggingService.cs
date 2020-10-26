@@ -1,67 +1,81 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using DiscordBot.Configuration;
-using System;
+﻿using System;
 using System.IO;
-using System.Threading.Tasks;
+using DiscordBot.Configuration;
+using DiscordBot.Logging.Serilog;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using Serilog.Formatting.Display;
+using Serilog.Formatting.Json;
 
 namespace DiscordBot.Services
 {
     public class LoggingService
     {
-        private readonly DiscordSocketClient client;
-        private readonly CommandService commands;
+        private ILogger logger;
+
         private readonly DiscordBotConfig config;
 
-        public LoggingService(DiscordSocketClient client, CommandService commands, DiscordBotConfig config)
+        public LoggingService(DiscordBotConfig config)
         {
-            this.client = client;
-            this.commands = commands;
             this.config = config;
-
-            client.Log += Log;
-            commands.Log += Log;
-
-            StartNewLog();
         }
 
-        private string LogFileName { get; set; }
-
-        private string LogFolderPath => config.Log.LogFolderPath;
-        private string LogFilePath => Path.Combine(LogFolderPath, LogFileName);
-
-        public void StartNewLog()
+        public ILogger Logger
         {
-            LogFileName = $"{DateTime.UtcNow:yyyy-MM-dd_HH-mm-ss}.log";
+            get
+            {
+                if (logger == null)
+                {
+                    logger = CreateLogger();
+                }
+
+                return logger;
+            }
         }
 
-        public Task Log(LogMessage message)
+        private string OutputTemplate { get; } = "[{Timestamp:HH:mm:ss}] [{Level}] [{ShortContext}]: {Message:lj}{NewLine}{Exception}";
+
+        private ILogger CreateLogger()
         {
-            var directory = new DirectoryInfo(LogFolderPath);
-            if (!directory.Exists)
-            {
-                directory.Create();
-            }
+            string path = GetNewLogFilePath();
 
-            var logFile = new FileInfo(LogFilePath);
-            if (!logFile.Exists)
-            {
-                logFile.Create().Dispose();
-            }
+            var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Verbose);
 
-            string logMessage = $"[{DateTime.UtcNow:HH:mm:ss}] [{message.Severity}] [{message.Source}]: {message.Message}";
+            var config = new LoggerConfiguration()
+                .Enrich.WithProperty("SourceContext", "Default")
+                .Enrich.With<ShortContextEnricher>()
+                .Enrich.WithThreadId()
+                .Enrich.WithThreadName()
+                .MinimumLevel.ControlledBy(levelSwitch);
 
-            if (message.Exception != null)
-            {
-                logMessage += $"{Environment.NewLine}{message.Exception}";
-            }
+            WriteToFile(config, path, OutputTemplate);
+            WriteToConsole(config, OutputTemplate);
 
-            File.AppendAllText(LogFilePath, $"{logMessage}{Environment.NewLine}");
+            return config.CreateLogger();
+        }
 
-            Console.WriteLine(logMessage);
+        private string GetNewLogFilePath()
+        {
+            string LogFileName = $"{DateTime.UtcNow:yyyy-MM-dd_HH-mm-ss}.log";
 
-            return Task.CompletedTask;
+            return Path.Combine(config.Log.LogFolderPath, LogFileName);
+        }
+
+        private void WriteToConsole(LoggerConfiguration config, string outputTemplate)
+        {
+            var textFormatter = new MessageTemplateTextFormatter(outputTemplate);
+
+            config.WriteTo.ColoredConsole(textFormatter);
+        }
+
+        private void WriteToFile(LoggerConfiguration config, string path, string outputTemplate)
+        {
+            var textFormatter = new MessageTemplateTextFormatter(outputTemplate);
+            var jsonFormatter = new JsonFormatter();
+
+            config.WriteTo.File(textFormatter, path);
+            config.WriteTo.File(jsonFormatter, $"{path}.json");
         }
     }
 }
