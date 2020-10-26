@@ -48,6 +48,7 @@ namespace DiscordBot
             Container = CreateContainer();
 
             Container.Resolve<CommandHandler>();
+            Container.Resolve<DiscordLoggingService>();
             await Container.Resolve<DiscordBotService>().Start();
 
             await Task.Delay(-1);
@@ -118,6 +119,7 @@ namespace DiscordBot
             builder.RegisterInstance(client).SingleInstance();
             builder.RegisterInstance(commandService).SingleInstance();
 
+            builder.RegisterType<DiscordLoggingService>().SingleInstance();
             builder.RegisterType<CommandHandler>().SingleInstance();
             builder.RegisterType<DiscordBotService>().SingleInstance();
             builder.RegisterType<EmbedHelper>().SingleInstance();
