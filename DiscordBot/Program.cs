@@ -66,13 +66,17 @@ namespace DiscordBot
         {
             var builder = new ContainerBuilder();
 
-            builder.Populate(new ServiceCollection());
-
+            InstallProgram(builder);
             InstallDiscordBot(builder);
             InstallInfiltratorGame(builder);
             InstallMiscellaneous(builder);
 
             return builder.Build();
+        }
+
+        private void InstallProgram(ContainerBuilder builder)
+        {
+            builder.Populate(new ServiceCollection());
         }
 
         private void InstallDiscordBot(ContainerBuilder builder)
@@ -96,11 +100,11 @@ namespace DiscordBot
                 DefaultRunMode = config.Commands.DefaultRunMode,
             });
 
-            builder.RegisterInstance(new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, ConfigPath)).SingleInstance();
-            builder.RegisterInstance(client).SingleInstance();
-            builder.RegisterInstance(commandService).SingleInstance();
             builder.RegisterInstance(config).SingleInstance();
             builder.RegisterInstance(reader).SingleInstance();
+
+            builder.RegisterInstance(client).SingleInstance();
+            builder.RegisterInstance(commandService).SingleInstance();
 
             builder.RegisterType<CommandHandler>().SingleInstance();
             builder.RegisterType<LoggingService>().SingleInstance();
