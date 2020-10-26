@@ -14,11 +14,6 @@ namespace DiscordBot.Services
         private readonly CommandService commands;
         private readonly DiscordBotConfig config;
 
-        private string LogFileName { get; set; }
-
-        private string LogFolderPath => config.Log.LogFolderPath;
-        private string LogFilePath => Path.Combine(LogFolderPath, LogFileName);
-
         public LoggingService(DiscordSocketClient client, CommandService commands, DiscordBotConfig config)
         {
             this.client = client;
@@ -30,6 +25,11 @@ namespace DiscordBot.Services
 
             StartNewLog();
         }
+
+        private string LogFileName { get; set; }
+
+        private string LogFolderPath => config.Log.LogFolderPath;
+        private string LogFilePath => Path.Combine(LogFolderPath, LogFileName);
 
         public void StartNewLog()
         {

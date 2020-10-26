@@ -13,16 +13,16 @@ namespace DiscordBot.General
     [Summary("Commands used to show how to use this bot.")]
     public class HelpModule : ModuleBase<SocketCommandContext>
     {
+        private readonly CommandService commands;
+        private readonly DiscordBotConfig config;
+        private readonly EmbedHelper embedHelper;
+
         public HelpModule(CommandService commands, DiscordBotConfig config, EmbedHelper embedHelper)
         {
-            Commands = commands;
-            Config = config;
-            EmbedHelper = embedHelper;
+            this.commands = commands;
+            this.config = config;
+            this.embedHelper = embedHelper;
         }
-
-        private CommandService Commands { get; }
-        private DiscordBotConfig Config { get; }
-        private EmbedHelper EmbedHelper { get; }
 
         [Command("Help")]
         [Summary("Shows information about all modules.")]
@@ -35,7 +35,7 @@ namespace DiscordBot.General
         [Summary("Shows information about the specified module and its commands.")]
         public async Task Help(string moduleName)
         {
-            var module = Commands.Modules.Where(x => string.Equals(x.Name, moduleName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            var module = commands.Modules.Where(x => string.Equals(x.Name, moduleName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
             if (module != null)
             {
@@ -49,10 +49,10 @@ namespace DiscordBot.General
 
         private async Task ListAllModules()
         {
-            var builder = EmbedHelper.CreateBuilder($"[All Modules]",
-                $"Use '{Config.Commands.Prefix}Help <moduleName>' to show information about a specific module.", Color.Green);
+            var builder = embedHelper.CreateBuilder($"[All Modules]",
+                $"Use '{config.Commands.Prefix}Help <moduleName>' to show information about a specific module.", Color.Green);
 
-            foreach (var module in Commands.Modules)
+            foreach (var module in commands.Modules)
             {
                 builder.AddField(module.Name, module.Summary);
             }
@@ -62,13 +62,13 @@ namespace DiscordBot.General
 
         private async Task ListModule(ModuleInfo module)
         {
-            var builder = EmbedHelper.CreateBuilder($"[{GetModuleName(module)} Module]", module.Summary, Color.Green);
+            var builder = embedHelper.CreateBuilder($"[{GetModuleName(module)} Module]", module.Summary, Color.Green);
 
             foreach (var command in module.Commands)
             {
                 string title = string.Empty;
 
-                title += $"{Config.Commands.Prefix}";
+                title += $"{config.Commands.Prefix}";
 
                 foreach (var group in GetCommandGroups(command))
                 {

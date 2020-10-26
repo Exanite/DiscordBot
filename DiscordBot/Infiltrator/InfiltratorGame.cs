@@ -21,14 +21,13 @@ namespace DiscordBot.Infiltrator
         public DateTimeOffset startTime;
         public IMessageChannel channel;
 
-        private DiscordSocketClient Client { get; }
-        private EmbedHelper EmbedHelper { get; }
-        private Enemy.Factory EnemyFactory { get; }
+        private readonly EmbedHelper embedHelper;
+        private readonly Enemy.Factory enemyFactory;
 
         public InfiltratorGame(EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
         {
-            EmbedHelper = embedHelper;
-            EnemyFactory = enemyFactory;
+            this.embedHelper = embedHelper;
+            this.enemyFactory = enemyFactory;
 
             this.channel = channel;
             startTime = DateTimeOffset.Now;
@@ -41,7 +40,7 @@ namespace DiscordBot.Infiltrator
                 enemyMessage.RemoveAllReactionsAsync().Forget();
             }
 
-            enemy = EnemyFactory.Create(this);
+            enemy = enemyFactory.Create(this);
 
             enemyMessage = await channel.SendMessageAsync(embed: enemy.ToEmbed());
             await enemyMessage.AddReactionAsync(attackEmote);
@@ -49,7 +48,7 @@ namespace DiscordBot.Infiltrator
 
         public Embed ToEmbed()
         {
-            return EmbedHelper.CreateBuilder("[Infiltrator Game Info]", "Shows information about the current game.")
+            return embedHelper.CreateBuilder("[Infiltrator Game Info]", "Shows information about the current game.")
                 .AddField("Running in", channel.Name)
                 .AddField("Started at", startTime)
                 .AddField("Player count", playersById.Count)
