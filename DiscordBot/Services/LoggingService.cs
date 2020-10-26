@@ -36,7 +36,7 @@ namespace DiscordBot.Services
             LogFileName = $"{DateTime.UtcNow:yyyy-MM-dd_HH-mm-ss}.log";
         }
 
-        public async Task Log(LogMessage message)
+        public Task Log(LogMessage message)
         {
             var directory = new DirectoryInfo(LogFolderPath);
             if (!directory.Exists)
@@ -57,9 +57,11 @@ namespace DiscordBot.Services
                 logMessage += $"{Environment.NewLine}{message.Exception}";
             }
 
-            await File.AppendAllTextAsync(LogFilePath, $"{logMessage}{Environment.NewLine}");
+            File.AppendAllText(LogFilePath, $"{logMessage}{Environment.NewLine}");
 
-            await Console.Out.WriteLineAsync(logMessage);
+            Console.WriteLine(logMessage);
+
+            return Task.CompletedTask;
         }
     }
 }
