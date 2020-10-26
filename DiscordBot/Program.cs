@@ -8,6 +8,7 @@ using DiscordBot.Configuration;
 using DiscordBot.Infiltrator;
 using DiscordBot.Json;
 using DiscordBot.Logging;
+using DiscordBot.Logging.Discord;
 using DiscordBot.Logging.Serilog;
 using DiscordBot.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -99,7 +100,7 @@ namespace DiscordBot
 
             var client = new DiscordSocketClient(new DiscordSocketConfig()
             {
-                LogLevel = config.Log.LogLevel,
+                LogLevel = config.Log.LogLevel.ToLogSeverity(),
                 MessageCacheSize = config.Socket.MessageCacheSize,
                 AlwaysDownloadUsers = config.Socket.AlwaysDownloadUsers,
                 ConnectionTimeout = config.Socket.ConnectionTimeOut,
@@ -108,7 +109,7 @@ namespace DiscordBot
 
             var commandService = new CommandService(new CommandServiceConfig
             {
-                LogLevel = config.Log.LogLevel,
+                LogLevel = config.Log.LogLevel.ToLogSeverity(),
                 CaseSensitiveCommands = config.Commands.CaseSensitive,
                 DefaultRunMode = config.Commands.DefaultRunMode,
             });

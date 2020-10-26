@@ -4,7 +4,6 @@ using DiscordBot.Configuration;
 using DiscordBot.Logging.Serilog;
 using Serilog;
 using Serilog.Core;
-using Serilog.Events;
 using Serilog.Formatting.Display;
 using Serilog.Formatting.Json;
 
@@ -34,25 +33,24 @@ namespace DiscordBot.Services
             }
         }
 
-        private string OutputTemplate { get; } = "[{Timestamp:HH:mm:ss}] [{Level}] [{ShortContext}]: {Message:lj}{NewLine}{Exception}";
-
         private ILogger CreateLogger()
         {
             string path = GetNewLogFilePath();
+            string outputTemplate = config.Log.OutputTemplate;
 
-            var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Verbose);
+            var levelSwitch = new LoggingLevelSwitch(config.Log.LogLevel.ToLogEventLevel());
 
-            var config = new LoggerConfiguration()
+            var builder = new LoggerConfiguration()
                 .Enrich.WithProperty("SourceContext", "Default")
                 .Enrich.With<ShortContextEnricher>()
                 .Enrich.WithThreadId()
                 .Enrich.WithThreadName()
                 .MinimumLevel.ControlledBy(levelSwitch);
 
-            WriteToFile(config, path, OutputTemplate);
-            WriteToConsole(config, OutputTemplate);
+            WriteToFile(builder, path, outputTemplate);
+            WriteToConsole(builder, outputTemplate);
 
-            return config.CreateLogger();
+            return builder.CreateLogger();
         }
 
         private string GetNewLogFilePath()

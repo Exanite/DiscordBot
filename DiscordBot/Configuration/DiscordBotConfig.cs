@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using DiscordBot.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -20,7 +21,8 @@ namespace DiscordBot.Configuration
         {
             public string LogFolderPath { get; set; } = @"Logs";
             [JsonConverter(typeof(StringEnumConverter))]
-            public LogSeverity LogLevel { get; set; } = LogSeverity.Verbose;
+            public LogLevel LogLevel { get; set; } = LogLevel.Verbose;
+            public string OutputTemplate { get; set; } = "[{Timestamp:HH:mm:ss}] [{Level}] [{ShortContext}]: {Message:lj}{NewLine}{Exception}";
         }
 
         [Serializable]
