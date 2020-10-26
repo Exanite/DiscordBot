@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -7,8 +8,15 @@ using Discord.WebSocket;
 using DiscordBot.Configuration;
 using DiscordBot.Infiltrator;
 using DiscordBot.Json;
+using DiscordBot.Logging;
+using DiscordBot.Logging.Serilog;
 using DiscordBot.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using Serilog.Formatting.Display;
+using Serilog.Formatting.Json;
 
 namespace DiscordBot
 {
@@ -67,6 +75,7 @@ namespace DiscordBot
             var builder = new ContainerBuilder();
 
             InstallProgram(builder);
+            InstallLog(builder);
             InstallDiscordBot(builder);
             InstallInfiltratorGame(builder);
             InstallMiscellaneous(builder);
@@ -77,6 +86,43 @@ namespace DiscordBot
         private void InstallProgram(ContainerBuilder builder)
         {
             builder.Populate(new ServiceCollection());
+        }
+
+        private void InstallLog(ContainerBuilder builder)
+        {
+            string outputTemplate = "[{Timestamp:HH:mm:ss}] [{Level}] [{ShortContext}]: {Message:lj}{NewLine}{Exception}";
+            string path = Path.Combine("Logs", "TheLog.log");
+
+            var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Verbose);
+
+            var config = new LoggerConfiguration()
+                .Enrich.WithProperty("SourceContext", "Default")
+                .Enrich.With<ShortContextEnricher>()
+                .Enrich.WithThreadId()
+                .Enrich.WithThreadName()
+                .MinimumLevel.ControlledBy(levelSwitch);
+
+            WriteToFile(config, path, outputTemplate);
+            WriteToConsole(config, outputTemplate);
+
+            var log = config.CreateLogger();
+
+            builder.RegisterInstance(log).As<ILogger>().SingleInstance();
+            builder.RegisterGeneric(typeof(SerilogLogAdapter<>)).As(typeof(ILog<>)).SingleInstance();
+        }
+
+        private void WriteToConsole(LoggerConfiguration config, string outputTemplate)
+        {
+            config.WriteTo.Console(new MessageTemplateTextFormatter(outputTemplate));
+        }
+
+        private void WriteToFile(LoggerConfiguration config, string path, string outputTemplate)
+        {
+            var textFormatter = new MessageTemplateTextFormatter(outputTemplate);
+            var jsonFormatter = new JsonFormatter();
+
+            config.WriteTo.File(textFormatter, path);
+            config.WriteTo.File(jsonFormatter, $"{path}.json");
         }
 
         private void InstallDiscordBot(ContainerBuilder builder)
