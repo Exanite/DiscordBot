@@ -10,26 +10,26 @@ namespace DiscordBot.Services
 {
     public class LoggingService
     {
-        public LoggingService(DiscordSocketClient client, CommandService commands, DiscordBotConfig config)
-        {
-            Client = client;
-            Commands = commands;
-            Config = config;
-
-            Client.Log += Log;
-            Commands.Log += Log;
-
-            StartNewLog();
-        }
+        private readonly DiscordSocketClient client;
+        private readonly CommandService commands;
+        private readonly DiscordBotConfig config;
 
         private string LogFileName { get; set; }
 
-        private string LogFolderPath => Config.Log.LogFolderPath;
+        private string LogFolderPath => config.Log.LogFolderPath;
         private string LogFilePath => Path.Combine(LogFolderPath, LogFileName);
 
-        private DiscordSocketClient Client { get; }
-        private CommandService Commands { get; }
-        private DiscordBotConfig Config { get; }
+        public LoggingService(DiscordSocketClient client, CommandService commands, DiscordBotConfig config)
+        {
+            this.client = client;
+            this.commands = commands;
+            this.config = config;
+
+            client.Log += Log;
+            commands.Log += Log;
+
+            StartNewLog();
+        }
 
         public void StartNewLog()
         {
