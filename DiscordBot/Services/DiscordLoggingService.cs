@@ -15,11 +15,11 @@ namespace DiscordBot.Services
         private const string GatewaySourceContext = "Gateway";
         private const string RestSourceContext = "Rest";
 
-        private ILog defaultLog;
-        private ILog commandLog;
-        private ILog discordLog;
-        private ILog gatewayLog;
-        private ILog restLog;
+        private readonly ILog defaultLog;
+        private readonly ILog commandLog;
+        private readonly ILog discordLog;
+        private readonly ILog gatewayLog;
+        private readonly ILog restLog;
 
         public DiscordLoggingService(ILog log, DiscordSocketClient client, CommandService commands)
         {
@@ -35,7 +35,7 @@ namespace DiscordBot.Services
 
         private Task Log(LogMessage message)
         {
-            ILog log = defaultLog;
+            var log = defaultLog;
 
             switch (message.Source)
             {
