@@ -20,46 +20,60 @@ namespace DiscordBot
     {
         public const string ConfigPath = @"Configs\DiscordBot\Config.json";
 
-        private IContainer Container { get; set; }
+        private IContainer container;
+        private ILog log;
+        private DiscordBotService bot;
 
         public static void Main()
         {
+            var program = new Program();
+
+            Console.CancelKeyPress += (s, e) =>
+            {
+                e.Cancel = true;
+                program.Exit();
+            };
+
             try
             {
-                var program = new Program();
-
-                Console.CancelKeyPress += (s, e) =>
-                {
-                    e.Cancel = true;
-                    program.Exit();
-                };
-
                 program.MainAsync().GetAwaiter().GetResult();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                Console.WriteLine("\nPress any key to exit...");
+                if (program.log != null)
+                {
+                    program.log.Fatal(e, "Unhandled exception.");
+                }
+                else // fallback if exception was caught during container build
+                {
+                    Console.WriteLine(e);
+                }
+
+                Console.WriteLine("\nUnhandled exception. Press any key to exit...");
                 Console.ReadKey();
             }
         }
 
         public async Task MainAsync()
         {
-            Container = CreateContainer();
+            container = CreateContainer();
 
-            Container.Resolve<CommandHandler>();
-            Container.Resolve<DiscordLoggingService>();
-            await Container.Resolve<DiscordBotService>().Start();
+            log = container.Resolve<ILog<Program>>();
+
+            container.Resolve<CommandHandler>();
+            container.Resolve<DiscordLoggingService>();
+
+            bot = container.Resolve<DiscordBotService>();
+
+            await bot.Start();
 
             await Task.Delay(-1);
         }
 
         public void Exit()
         {
-            if (Container != null)
+            if (bot != null)
             {
-                var bot = Container.Resolve<DiscordBotService>();
                 bot.Stop().GetAwaiter().GetResult();
             }
 
