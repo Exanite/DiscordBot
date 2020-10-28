@@ -24,9 +24,9 @@ namespace DiscordBot.Infiltrator
             gameManager.CreateGame((ITextChannel)Context.Channel).CreateAndShowNewEnemy().Forget();
         }
 
-        [Command("Current")]
-        [Summary("Shows information about the current game.")]
-        public async Task GetCurrent()
+        [Command("GameInfo"), Alias("Game")]
+        [Summary("Shows information about the current game in the channel.")]
+        public async Task GetGameInfo()
         {
             var game = gameManager.CurrentGame;
 
@@ -36,7 +36,9 @@ namespace DiscordBot.Infiltrator
             }
             else
             {
-                await Context.Channel.SendMessageAsync("No games active.");
+                await Context.Channel.SendMessageAsync("No games active in this channel.");
+            }
+        }
 
         [Command("PlayerInfo"), Alias("Player")]
         [Summary("Shows information the specified player.")]
