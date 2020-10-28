@@ -6,44 +6,60 @@ namespace DiscordBot.Infiltrator
 {
     public partial class Enemy
     {
-        public static readonly string SpawnActionMessage = "A wild Infiltrator has appeared!";
+        public const string SpawnActionMessage = "A wild Infiltrator has appeared!";
 
-        public string name;
-        public Stat health;
-
-        public string lastActionMessage;
+        private readonly EmbedHelper EmbedHelper;
+        private readonly Random Random;
 
         public Enemy(EmbedHelper embedHelper, Random random)
         {
             EmbedHelper = embedHelper;
             Random = random;
-
-            lastActionMessage = SpawnActionMessage;
         }
 
-        public void Construct(string name, int health)
+        public void Construct(string name, int health, int credits)
         {
-            this.name = name;
-            this.health = new Stat("Health", health, health);
+            Name = name;
+            Health = new Stat("Health", health);
+            Credits = credits;
+
+            LastActionMessage = SpawnActionMessage;
         }
 
-        public EmbedHelper EmbedHelper { get; }
-        public Random Random { get; }
+        public event Action<Player, Enemy, int> Attacked;
+        public event Action<Player, Enemy> Killed;
 
-        public void OnAttacked(InfiltratorGame game, Player player)
+        public string Name { get; set; }
+        public int Credits { get; set; }
+
+        public Stat Health { get; set; }
+
+        public string LastActionMessage { get; set; }
+
+        public void OnAttacked(Player player)
         {
             int damage = Random.Next(1, 5);
 
-            health.value -= damage;
+            Health.Value -= damage;
 
-            lastActionMessage = $"Attacked by {player} for {damage} damage ";
+            LastActionMessage = $"Attacked by {player.Mention} for {damage} damage.";
+            Attacked?.Invoke(player, this, damage);
+
+            if (Health.Value < 0)
+            {
+                player.Credits += Credits;
+
+                LastActionMessage = $"Killed by {player.Mention}.\nThey recieved {Credits} credits!";
+                Killed?.Invoke(player, this);
+            }
         }
 
         public Embed ToEmbed()
         {
-            return EmbedHelper.CreateBuilder("[Infiltrator Battle]", lastActionMessage)
-                .AddField("Name", name)
-                .AddField(health.name, $"{health.value}/{health.max}")
+            return EmbedHelper.CreateBuilder("[Infiltrator Battle]", LastActionMessage)
+                .AddField("Name", Name)
+                .AddField(Health.Name, $"{Health.Value}/{Health.Max}")
+                .AddField("Credits", Credits)
                 .Build();
         }
     }

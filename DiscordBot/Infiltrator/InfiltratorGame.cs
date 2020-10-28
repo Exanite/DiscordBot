@@ -73,15 +73,14 @@ namespace DiscordBot.Infiltrator
                     playersById.Add(player.Id, player);
                 }
 
-                enemy.OnAttacked(this, player);
+                enemy.OnAttacked(player);
 
                 await Task.WhenAll(
                     enemyMessage.ModifyAsync(x => x.Embed = enemy.ToEmbed()),
                     enemyMessage.RemoveReactionAsync(reaction.Emote, reaction.User.GetValueOrDefault()));
 
-                if (enemy.health.value <= 0)
+                if (enemy.Health.Value <= 0)
                 {
-                    await channel.SendMessageAsync($"{enemy.name} has been defeated by {player}.");
                     await CreateAndShowNewEnemy();
                 }
             }
