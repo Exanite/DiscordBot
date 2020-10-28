@@ -81,7 +81,6 @@ namespace DiscordBot.Infiltrator
 
                 if (enemy.Health.Value <= 0)
                 {
-                    await channel.SendMessageAsync($"{enemy.Name} has been defeated by {player}.");
                     await CreateAndShowNewEnemy();
                 }
             }

@@ -99,8 +99,8 @@ namespace DiscordBot.Infiltrator
             {
                 var enemy = new Enemy(embedHelper, random);
                 string name = GetRandomName();
-                int health = random.Next(8, 12);
-                int credits = random.Next(8, 12);
+                int health = random.Next(5, 15);
+                int credits = random.Next(5, 15) + health;
 
                 enemy.Construct(name, health, credits);
 
