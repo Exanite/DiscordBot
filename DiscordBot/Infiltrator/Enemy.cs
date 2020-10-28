@@ -40,13 +40,13 @@ namespace DiscordBot.Infiltrator
         {
             int damage = Random.Next(1, 5);
 
-            Health.value -= damage;
+            Health.Value -= damage;
 
             LastActionMessage = $"Attacked by {player} for {damage} damage ";
 
             Attacked?.Invoke(player, this, damage);
 
-            if (Health.value < 0)
+            if (Health.Value < 0)
             {
                 Killed?.Invoke(player, this);
             }
@@ -56,7 +56,7 @@ namespace DiscordBot.Infiltrator
         {
             return EmbedHelper.CreateBuilder("[Infiltrator Battle]", LastActionMessage)
                 .AddField("Name", Name)
-                .AddField(Health.name, $"{Health.value}/{Health.max}")
+                .AddField(Health.Name, $"{Health.Value}/{Health.Max}")
                 .AddField("Credits", Credits)
                 .Build();
         }
