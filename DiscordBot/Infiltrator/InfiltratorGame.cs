@@ -73,7 +73,7 @@ namespace DiscordBot.Infiltrator
                     playersById.Add(player.Id, player);
                 }
 
-                enemy.OnAttacked(this, player);
+                enemy.OnAttacked(player);
 
                 await Task.WhenAll(
                     enemyMessage.ModifyAsync(x => x.Embed = enemy.ToEmbed()),

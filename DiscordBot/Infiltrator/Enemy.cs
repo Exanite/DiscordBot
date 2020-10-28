@@ -15,6 +15,9 @@ namespace DiscordBot.Infiltrator
 
         public string lastActionMessage;
 
+        public event Action<Player, Enemy, int> Attacked;
+        public event Action<Player, Enemy> Killed;
+
         public Enemy(EmbedHelper embedHelper, Random random)
         {
             EmbedHelper = embedHelper;
@@ -33,13 +36,20 @@ namespace DiscordBot.Infiltrator
         public EmbedHelper EmbedHelper { get; }
         public Random Random { get; }
 
-        public void OnAttacked(InfiltratorGame game, Player player)
+        public void OnAttacked(Player player)
         {
             int damage = Random.Next(1, 5);
 
             health.value -= damage;
 
             lastActionMessage = $"Attacked by {player} for {damage} damage ";
+
+            Attacked?.Invoke(player, this, damage);
+
+            if (health.value < 0)
+            {
+                Killed?.Invoke(player, this);
+            }
         }
 
         public Embed ToEmbed()
