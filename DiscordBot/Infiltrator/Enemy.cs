@@ -24,7 +24,7 @@ namespace DiscordBot.Infiltrator
         public void Construct(string name, int health)
         {
             this.name = name;
-            this.health = new Stat("Health", health, health);
+            this.health = new Stat("Health", health);
         }
 
         public EmbedHelper EmbedHelper { get; }

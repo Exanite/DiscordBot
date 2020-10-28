@@ -6,6 +6,8 @@
         public int value;
         public int max;
 
+        public Stat(string name, int max) : this(name, max, max) { }
+
         public Stat(string name, int value, int max)
         {
             this.name = name;
