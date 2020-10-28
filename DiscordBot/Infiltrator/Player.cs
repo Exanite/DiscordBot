@@ -35,7 +35,7 @@ namespace DiscordBot.Infiltrator
                 .WithAuthor(new EmbedAuthorBuilder()
                 {
                     IconUrl = User.GetAvatarUrl(),
-                    Name = Username,
+                    Name = $"[{Username}]",
                 })
                 .WithColor(Color.Blue)
                 .WithCurrentTimestamp();
