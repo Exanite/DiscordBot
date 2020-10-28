@@ -37,6 +37,22 @@ namespace DiscordBot.Infiltrator
             else
             {
                 await Context.Channel.SendMessageAsync("No games active.");
+
+        [Command("PlayerInfo"), Alias("Player")]
+        [Summary("Shows information the specified player.")]
+        public async Task GetPlayerInfo(IUser user = null)
+        {
+            user = user ?? Context.User;
+
+            var game = gameManager.CurrentGame;
+
+            if (game != null && game.playersById.TryGetValue(user.Id, out Player player))
+            {
+                await Context.Channel.SendMessageAsync(embed: player.ToEmbed());
+            }
+            else
+            {
+                await Context.Channel.SendMessageAsync("Player not found in current game.");
             }
         }
     }
