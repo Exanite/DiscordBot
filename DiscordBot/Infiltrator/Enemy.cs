@@ -6,7 +6,7 @@ namespace DiscordBot.Infiltrator
 {
     public partial class Enemy
     {
-        public static readonly string SpawnActionMessage = "A wild Infiltrator has appeared!";
+        public const string SpawnActionMessage = "A wild Infiltrator has appeared!";
 
         private readonly EmbedHelper EmbedHelper;
         private readonly Random Random;
