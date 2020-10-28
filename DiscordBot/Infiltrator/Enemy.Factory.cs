@@ -86,31 +86,33 @@ namespace DiscordBot.Infiltrator
                 "Virus",
             };
 
+            private readonly EmbedHelper embedHelper;
+            private readonly Random random;
+
             public Factory(EmbedHelper embedHelper, Random random)
             {
-                EmbedHelper = embedHelper;
-                Random = random;
+                this.embedHelper = embedHelper;
+                this.random = random;
             }
-
-            private EmbedHelper EmbedHelper { get; }
-            private Random Random { get; }
 
             public Enemy Create(InfiltratorGame game)
             {
-                int nameIndex = Random.Next(0, EnemyNames.Count);
+                var enemy = new Enemy(embedHelper, random);
+                string name = GetRandomName();
+                int health = random.Next(8, 12);
+                int credits = random.Next(8, 12);
 
-                var enemy = new Enemy(EmbedHelper, Random);
-                enemy.Construct(GetRandomName(), 10);
+                enemy.Construct(name, health, credits);
 
                 return enemy;
             }
 
             public string GetRandomName()
             {
-                int prefixIndex = Random.Next(0, PrefixNames.Count);
-                int suffixIndex = Random.Next(0, SuffixNames.Count);
+                int prefixIndex = random.Next(0, PrefixNames.Count);
+                int suffixIndex = random.Next(0, SuffixNames.Count);
 
-                int nameIndex = Random.Next(0, EnemyNames.Count);
+                int nameIndex = random.Next(0, EnemyNames.Count);
 
                 return $"{PrefixNames[prefixIndex]} {EnemyNames[nameIndex]} {SuffixNames[suffixIndex]}";
             }

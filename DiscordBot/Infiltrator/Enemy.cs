@@ -9,6 +9,8 @@ namespace DiscordBot.Infiltrator
         public static readonly string SpawnActionMessage = "A wild Infiltrator has appeared!";
 
         public string name;
+        public int credits;
+
         public Stat health;
 
         public string lastActionMessage;
@@ -21,10 +23,11 @@ namespace DiscordBot.Infiltrator
             lastActionMessage = SpawnActionMessage;
         }
 
-        public void Construct(string name, int health)
+        public void Construct(string name, int health, int credits)
         {
             this.name = name;
             this.health = new Stat("Health", health);
+            this.credits = credits;
         }
 
         public EmbedHelper EmbedHelper { get; }
@@ -44,6 +47,7 @@ namespace DiscordBot.Infiltrator
             return EmbedHelper.CreateBuilder("[Infiltrator Battle]", lastActionMessage)
                 .AddField("Name", name)
                 .AddField(health.name, $"{health.value}/{health.max}")
+                .AddField("Credits", credits)
                 .Build();
         }
     }
