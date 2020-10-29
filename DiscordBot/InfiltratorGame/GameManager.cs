@@ -2,18 +2,17 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
     public class GameManager
     {
         private readonly Game.Factory gameFactory;
-        private readonly DiscordSocketClient client;
 
         public GameManager(Game.Factory gameFactory, DiscordSocketClient client)
         {
             this.gameFactory = gameFactory;
-            this.client = client;
 
             client.ReactionAdded += OnReactionAdded;
         }
@@ -26,6 +25,16 @@ namespace DiscordBot.InfiltratorGame
             Games[channel.Id] = game;
 
             return game;
+        }
+
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(Games);
+        }
+
+        public void FromJson(string json)
+        {
+            JsonConvert.PopulateObject(json, this);
         }
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
