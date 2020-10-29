@@ -28,9 +28,7 @@ namespace DiscordBot.InfiltratorGame
         [Summary("Shows information about the current game in the channel.")]
         public async Task GetGameInfo()
         {
-            var game = gameManager.CurrentGame;
-
-            if (game != null)
+            if (gameManager.Games.TryGetValue(Context.Channel.Id, out Game game))
             {
                 await Context.Channel.SendMessageAsync(embed: game.ToEmbed());
             }
@@ -46,9 +44,7 @@ namespace DiscordBot.InfiltratorGame
         {
             user = user ?? Context.User;
 
-            var game = gameManager.CurrentGame;
-
-            if (game != null && game.playersById.TryGetValue(user.Id, out Player player))
+            if (gameManager.Games.TryGetValue(Context.Channel.Id, out Game game) && game.playersById.TryGetValue(user.Id, out Player player))
             {
                 await Context.Channel.SendMessageAsync(embed: player.ToEmbed());
             }
