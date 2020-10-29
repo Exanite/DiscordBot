@@ -1,9 +1,9 @@
 ﻿using Discord;
 using DiscordBot.Services;
 
-namespace DiscordBot.Infiltrator
+namespace DiscordBot.InfiltratorGame
 {
-    public partial class InfiltratorGame
+    public partial class Game
     {
         public class Factory
         {
@@ -16,9 +16,9 @@ namespace DiscordBot.Infiltrator
             private EmbedHelper EmbedHelper { get; }
             private Enemy.Factory EnemyFactory { get; }
 
-            public InfiltratorGame CreateGame(ITextChannel channel)
+            public Game CreateGame(ITextChannel channel)
             {
-                return new InfiltratorGame(EmbedHelper, EnemyFactory, channel);
+                return new Game(EmbedHelper, EnemyFactory, channel);
             }
         }
     }

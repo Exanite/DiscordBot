@@ -2,7 +2,7 @@
 using Discord;
 using DiscordBot.Services;
 
-namespace DiscordBot.Infiltrator
+namespace DiscordBot.InfiltratorGame
 {
     public partial class Enemy
     {

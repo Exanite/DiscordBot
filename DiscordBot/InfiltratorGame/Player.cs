@@ -1,6 +1,6 @@
 ﻿using Discord;
 
-namespace DiscordBot.Infiltrator
+namespace DiscordBot.InfiltratorGame
 {
     public class Player
     {
