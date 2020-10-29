@@ -1,4 +1,4 @@
-﻿namespace DiscordBot.Infiltrator
+﻿namespace DiscordBot.InfiltratorGame
 {
     public class Stat
     {

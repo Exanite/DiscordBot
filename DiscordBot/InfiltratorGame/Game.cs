@@ -6,9 +6,9 @@ using Discord.WebSocket;
 using DiscordBot.Extensions;
 using DiscordBot.Services;
 
-namespace DiscordBot.Infiltrator
+namespace DiscordBot.InfiltratorGame
 {
-    public partial class InfiltratorGame
+    public partial class Game
     {
         public static readonly IEmote attackEmote = new Emoji("⚔️");
 
@@ -24,7 +24,7 @@ namespace DiscordBot.Infiltrator
         private readonly EmbedHelper embedHelper;
         private readonly Enemy.Factory enemyFactory;
 
-        public InfiltratorGame(EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
+        public Game(EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
         {
             this.embedHelper = embedHelper;
             this.enemyFactory = enemyFactory;

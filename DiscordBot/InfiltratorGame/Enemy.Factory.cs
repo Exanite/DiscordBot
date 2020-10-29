@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DiscordBot.Services;
 
-namespace DiscordBot.Infiltrator
+namespace DiscordBot.InfiltratorGame
 {
     public partial class Enemy
     {
@@ -95,7 +95,7 @@ namespace DiscordBot.Infiltrator
                 this.random = random;
             }
 
-            public Enemy Create(InfiltratorGame game)
+            public Enemy Create(Game game)
             {
                 var enemy = new Enemy(embedHelper, random);
                 string name = GetRandomName();

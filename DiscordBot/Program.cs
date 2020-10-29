@@ -5,7 +5,7 @@ using Autofac.Extensions.DependencyInjection;
 using Discord.Commands;
 using Discord.WebSocket;
 using DiscordBot.Configuration;
-using DiscordBot.Infiltrator;
+using DiscordBot.InfiltratorGame;
 using DiscordBot.Json;
 using DiscordBot.Logging;
 using DiscordBot.Logging.Discord;
@@ -142,8 +142,8 @@ namespace DiscordBot
 
         private void InstallInfiltratorGame(ContainerBuilder builder)
         {
-            builder.RegisterType<InfiltratorGameManager>().SingleInstance();
-            builder.RegisterType<InfiltratorGame.Factory>().SingleInstance();
+            builder.RegisterType<GameManager>().SingleInstance();
+            builder.RegisterType<Game.Factory>().SingleInstance();
             builder.RegisterType<Enemy.Factory>().SingleInstance();
         }
 
