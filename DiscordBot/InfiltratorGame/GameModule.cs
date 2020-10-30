@@ -44,7 +44,7 @@ namespace DiscordBot.InfiltratorGame
         {
             user = user ?? Context.User;
 
-            if (gameManager.Games.TryGetValue(Context.Channel.Id, out Game game) && game.playersById.TryGetValue(user.Id, out Player player))
+            if (gameManager.Games.TryGetValue(Context.Channel.Id, out Game game) && game.PlayersById.TryGetValue(user.Id, out Player player))
             {
                 await Context.Channel.SendMessageAsync(embed: player.ToEmbed());
             }

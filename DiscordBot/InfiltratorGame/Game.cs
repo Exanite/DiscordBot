@@ -12,20 +12,10 @@ namespace DiscordBot.InfiltratorGame
     [JsonObject(MemberSerialization.OptIn)]
     public partial class Game
     {
-        public static readonly IEmote attackEmote = new Emoji("⚔️");
+        public static readonly IEmote AttackEmote = new Emoji("⚔️");
 
-        [JsonProperty]
-        public Dictionary<ulong, Player> playersById = new Dictionary<ulong, Player>();
-
-        [JsonProperty]
-        public Enemy enemy;
-        public IUserMessage enemyMessage;
-
-        [JsonProperty]
-        public int difficultyLevel = 0;
-        [JsonProperty]
-        public DateTimeOffset startTime;
-        public IMessageChannel channel;
+        private IUserMessage enemyMessage;
+        private IMessageChannel channel;
 
         private readonly EmbedHelper embedHelper;
         private readonly Enemy.Factory enemyFactory;
@@ -36,29 +26,42 @@ namespace DiscordBot.InfiltratorGame
             this.enemyFactory = enemyFactory;
 
             this.channel = channel;
-            startTime = DateTimeOffset.Now;
+
+            StartTime = DateTimeOffset.Now;
         }
+
+        [JsonProperty]
+        public Dictionary<ulong, Player> PlayersById = new Dictionary<ulong, Player>();
+
+        [JsonProperty]
+        public Enemy Enemy;
+
+        [JsonProperty]
+        public int DifficultyLevel = 0;
+
+        [JsonProperty]
+        public DateTimeOffset StartTime;
 
         public async Task CreateAndShowNewEnemy() // todo split into different methods
         {
-            if (enemy != null)
+            if (Enemy != null)
             {
                 enemyMessage.RemoveAllReactionsAsync().Forget();
             }
 
-            enemy = enemyFactory.Create(this);
+            Enemy = enemyFactory.Create(this);
 
-            enemyMessage = await channel.SendMessageAsync(embed: enemy.ToEmbed());
-            await enemyMessage.AddReactionAsync(attackEmote);
+            enemyMessage = await channel.SendMessageAsync(embed: Enemy.ToEmbed());
+            await enemyMessage.AddReactionAsync(AttackEmote);
         }
 
         public Embed ToEmbed()
         {
             return embedHelper.CreateBuilder("[Infiltrator Game Info]", "Shows information about the current game.")
                 .AddField("Running in", channel.Name)
-                .AddField("Started at", startTime)
-                .AddField("Player count", playersById.Count)
-                .AddField("Difficulty level", difficultyLevel)
+                .AddField("Started at", StartTime)
+                .AddField("Player count", PlayersById.Count)
+                .AddField("Difficulty level", DifficultyLevel)
                 .Build();
         }
 
@@ -71,21 +74,21 @@ namespace DiscordBot.InfiltratorGame
                 return;
             }
 
-            if (reaction.Emote.Name == attackEmote.Name)
+            if (reaction.Emote.Name == AttackEmote.Name)
             {
-                if (!playersById.TryGetValue(reaction.UserId, out Player player))
+                if (!PlayersById.TryGetValue(reaction.UserId, out Player player))
                 {
                     player = new Player(reaction.User.GetValueOrDefault());
-                    playersById.Add(player.Id, player);
+                    PlayersById.Add(player.Id, player);
                 }
 
-                enemy.OnAttacked(player);
+                Enemy.OnAttacked(player);
 
                 await Task.WhenAll(
-                    enemyMessage.ModifyAsync(x => x.Embed = enemy.ToEmbed()),
+                    enemyMessage.ModifyAsync(x => x.Embed = Enemy.ToEmbed()),
                     enemyMessage.RemoveReactionAsync(reaction.Emote, reaction.User.GetValueOrDefault()));
 
-                if (enemy.Health.Value <= 0)
+                if (Enemy.Health.Value <= 0)
                 {
                     await CreateAndShowNewEnemy();
                 }
