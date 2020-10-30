@@ -10,10 +10,12 @@ namespace DiscordBot.InfiltratorGame
     public class GameModule : ModuleBase<SocketCommandContext>
     {
         private readonly GameManager gameManager;
+        private readonly PlayerManager playerManager;
 
-        public GameModule(GameManager gameManager)
+        public GameModule(GameManager gameManager, PlayerManager playerManager)
         {
             this.gameManager = gameManager;
+            this.playerManager = playerManager;
         }
 
         [Command("StartGame"), Alias("Start")]
@@ -44,7 +46,7 @@ namespace DiscordBot.InfiltratorGame
         {
             user = user ?? Context.User;
 
-            if (gameManager.Games.TryGetValue(Context.Channel.Id, out Game game) && game.PlayersById.TryGetValue(user.Id, out Player player))
+            if (playerManager.PlayersById.TryGetValue(user.Id, out Player player))
             {
                 await Context.Channel.SendMessageAsync(embed: player.ToEmbed());
             }

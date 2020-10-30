@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -17,11 +16,13 @@ namespace DiscordBot.InfiltratorGame
         private IUserMessage enemyMessage;
         private IMessageChannel channel;
 
+        private readonly PlayerManager playerManager;
         private readonly EmbedHelper embedHelper;
         private readonly Enemy.Factory enemyFactory;
 
-        public Game(EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
+        public Game(PlayerManager playerManager, EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
         {
+            this.playerManager = playerManager;
             this.embedHelper = embedHelper;
             this.enemyFactory = enemyFactory;
 
@@ -29,9 +30,6 @@ namespace DiscordBot.InfiltratorGame
 
             StartTime = DateTimeOffset.Now;
         }
-
-        [JsonProperty]
-        public Dictionary<ulong, Player> PlayersById = new Dictionary<ulong, Player>();
 
         [JsonProperty]
         public Enemy Enemy;
@@ -60,7 +58,7 @@ namespace DiscordBot.InfiltratorGame
             return embedHelper.CreateBuilder("[Infiltrator Game Info]", "Shows information about the current game.")
                 .AddField("Running in", channel.Name)
                 .AddField("Started at", StartTime)
-                .AddField("Player count", PlayersById.Count)
+                .AddField("Player count", playerManager.PlayersById.Count)
                 .AddField("Difficulty level", DifficultyLevel)
                 .Build();
         }
@@ -76,11 +74,8 @@ namespace DiscordBot.InfiltratorGame
 
             if (reaction.Emote.Name == AttackEmote.Name)
             {
-                if (!PlayersById.TryGetValue(reaction.UserId, out Player player))
-                {
-                    player = new Player(reaction.User.GetValueOrDefault());
-                    PlayersById.Add(player.Id, player);
-                }
+                var user = reaction.User.GetValueOrDefault();
+                var player = playerManager.GetFor(user);
 
                 Enemy.OnAttacked(player);
 

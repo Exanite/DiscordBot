@@ -143,6 +143,7 @@ namespace DiscordBot
         private void InstallInfiltratorGame(ContainerBuilder builder)
         {
             builder.RegisterType<GameManager>().SingleInstance();
+            builder.RegisterType<PlayerManager>().SingleInstance();
             builder.RegisterType<Game.Factory>().SingleInstance();
             builder.RegisterType<Enemy.Factory>().SingleInstance();
         }
