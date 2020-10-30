@@ -53,5 +53,14 @@ namespace DiscordBot.InfiltratorGame
                 await Context.Channel.SendMessageAsync("Player not found in current game.");
             }
         }
+
+        [Command("Serialize")]
+        [Summary("Serializes the game and returns current game data in JSON format.")]
+        public async Task Serialize()
+        {
+            string json = gameManager.ToJson();
+
+            await Context.Channel.SendMessageAsync($"```json\n{json}\n```");
+        }
     }
 }

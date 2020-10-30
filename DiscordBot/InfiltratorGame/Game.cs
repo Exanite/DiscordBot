@@ -5,19 +5,25 @@ using Discord;
 using Discord.WebSocket;
 using DiscordBot.Extensions;
 using DiscordBot.Services;
+using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class Game
     {
         public static readonly IEmote attackEmote = new Emoji("⚔️");
 
+        [JsonProperty]
         public Dictionary<ulong, Player> playersById = new Dictionary<ulong, Player>();
 
+        [JsonProperty]
         public Enemy enemy;
         public IUserMessage enemyMessage;
 
+        [JsonProperty]
         public int difficultyLevel = 0;
+        [JsonProperty]
         public DateTimeOffset startTime;
         public IMessageChannel channel;
 

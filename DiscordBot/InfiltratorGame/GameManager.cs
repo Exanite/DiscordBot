@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class GameManager
     {
         private readonly Game.Factory gameFactory;
@@ -17,6 +18,7 @@ namespace DiscordBot.InfiltratorGame
             client.ReactionAdded += OnReactionAdded;
         }
 
+        [JsonProperty]
         public Dictionary<ulong, Game> Games { get; } = new Dictionary<ulong, Game>();
 
         public Game CreateGame(ITextChannel channel)
@@ -29,7 +31,7 @@ namespace DiscordBot.InfiltratorGame
 
         public string ToJson()
         {
-            return JsonConvert.SerializeObject(Games);
+            return JsonConvert.SerializeObject(Games, Formatting.Indented);
         }
 
         public void FromJson(string json)
