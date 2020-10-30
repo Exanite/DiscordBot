@@ -7,18 +7,20 @@ namespace DiscordBot.InfiltratorGame
     {
         public class Factory
         {
-            public Factory(EmbedHelper embedHelper, Enemy.Factory enemyFactory)
-            {
-                EmbedHelper = embedHelper;
-                EnemyFactory = enemyFactory;
-            }
+            private readonly PlayerManager playerManager;
+            private readonly EmbedHelper embedHelper;
+            private readonly Enemy.Factory enemyFactory;
 
-            private EmbedHelper EmbedHelper { get; }
-            private Enemy.Factory EnemyFactory { get; }
+            public Factory(PlayerManager playerManager, EmbedHelper embedHelper, Enemy.Factory enemyFactory)
+            {
+                this.embedHelper = embedHelper;
+                this.enemyFactory = enemyFactory;
+                this.playerManager = playerManager;
+            }
 
             public Game CreateGame(ITextChannel channel)
             {
-                return new Game(EmbedHelper, EnemyFactory, channel);
+                return new Game(playerManager, embedHelper, enemyFactory, channel);
             }
         }
     }
