@@ -16,17 +16,17 @@ namespace DiscordBot.InfiltratorGame
             Mention = user.Mention;
         }
 
-        public IUser User { get; } // ? not sure about using this here
-
         [JsonProperty]
         public ulong Id { get; }
+
+        [JsonProperty]
+        public int Credits { get; set; }
+
+        public IUser User { get; } // ? not sure about using this here
         public string Username { get; }
         public string Discriminator { get; }
         public string Mention { get; }
         public string FullUsername => $"{Username}:{Discriminator}";
-
-        [JsonProperty]
-        public int Credits { get; set; }
 
         public override string ToString()
         {
