@@ -4,14 +4,17 @@ using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class PlayerManager
     {
+        private readonly Dictionary<ulong, Player> PlayerDictionary = new Dictionary<ulong, Player>();
+
         [JsonProperty]
-        public Dictionary<ulong, Player> PlayersById { get; set; } = new Dictionary<ulong, Player>();
+        public IReadOnlyDictionary<ulong, Player> PlayersById => PlayerDictionary;
 
         public Player GetFor(IUser user)
         {
-            if (PlayersById.TryGetValue(user.Id, out Player player))
+            if (PlayerDictionary.TryGetValue(user.Id, out Player player))
             {
                 return player;
             }
@@ -24,7 +27,7 @@ namespace DiscordBot.InfiltratorGame
         private Player CreateFor(IUser user)
         {
             var player = new Player(user);
-            PlayersById.Add(player.Id, player);
+            PlayerDictionary.Add(player.Id, player);
 
             return player;
         }

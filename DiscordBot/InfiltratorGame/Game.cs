@@ -74,11 +74,8 @@ namespace DiscordBot.InfiltratorGame
 
             if (reaction.Emote.Name == AttackEmote.Name)
             {
-                if (!playerManager.PlayersById.TryGetValue(reaction.UserId, out Player player))
-                {
-                    player = new Player(reaction.User.GetValueOrDefault());
-                    playerManager.PlayersById.Add(player.Id, player);
-                }
+                var user = reaction.User.GetValueOrDefault();
+                var player = playerManager.GetFor(user);
 
                 Enemy.OnAttacked(player);
 
