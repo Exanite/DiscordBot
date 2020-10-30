@@ -1,33 +1,50 @@
-﻿using Discord;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Discord;
 using Discord.WebSocket;
+using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class GameManager
     {
         private readonly Game.Factory gameFactory;
-        private readonly DiscordSocketClient client;
 
         public GameManager(Game.Factory gameFactory, DiscordSocketClient client)
         {
             this.gameFactory = gameFactory;
-            this.client = client;
+
+            client.ReactionAdded += OnReactionAdded;
         }
 
-        public Game CurrentGame { get; private set; }
+        [JsonProperty]
+        public Dictionary<ulong, Game> Games { get; } = new Dictionary<ulong, Game>();
 
         public Game CreateGame(ITextChannel channel)
         {
-            if (CurrentGame != null)
+            var game = gameFactory.CreateGame(channel);
+            Games[channel.Id] = game;
+
+            return game;
+        }
+
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(Games, Formatting.Indented);
+        }
+
+        public void FromJson(string json)
+        {
+            JsonConvert.PopulateObject(json, this);
+        }
+
+        private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
+        {
+            if (Games.TryGetValue(channel.Id, out Game game))
             {
-                client.ReactionAdded -= CurrentGame.OnReactionAdded;
+                await game.OnReactionAdded(cacheable, channel, reaction);
             }
-
-            CurrentGame = gameFactory.CreateGame(channel);
-
-            client.ReactionAdded += CurrentGame.OnReactionAdded;
-
-            return CurrentGame;
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using Discord;
 using DiscordBot.Services;
+using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class Enemy
     {
         public const string SpawnActionMessage = "A wild Infiltrator has appeared!";
@@ -29,11 +31,16 @@ namespace DiscordBot.InfiltratorGame
         public event Action<Player, Enemy, int> Attacked;
         public event Action<Player, Enemy> Killed;
 
+        [JsonProperty]
         public string Name { get; set; }
+
+        [JsonProperty]
         public int Credits { get; set; }
 
+        [JsonProperty]
         public Stat Health { get; set; }
 
+        [JsonProperty]
         public string LastActionMessage { get; set; }
 
         public void OnAttacked(Player player)
