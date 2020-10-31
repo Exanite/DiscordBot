@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Enemy
     {
         private readonly EmbedHelper EmbedHelper;

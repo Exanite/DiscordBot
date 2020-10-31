@@ -5,12 +5,10 @@ using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public class PlayerManager
     {
         private readonly Dictionary<ulong, Player> PlayerDictionary = new Dictionary<ulong, Player>();
 
-        [JsonProperty]
         public IReadOnlyDictionary<ulong, Player> PlayersById => PlayerDictionary;
 
         public Player GetFor(IUser user)

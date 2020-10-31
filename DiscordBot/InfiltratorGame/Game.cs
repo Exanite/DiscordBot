@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Game
     {
         public static readonly IEmote AttackEmote = new Emoji("⚔️");
