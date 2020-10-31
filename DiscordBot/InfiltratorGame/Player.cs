@@ -20,7 +20,7 @@ namespace DiscordBot.InfiltratorGame
 
         public IUser User { get; }
 
-        public PlayerData Data { get; }
+        public PlayerData Data { get; set; }
 
         public Embed ToEmbed()
         {

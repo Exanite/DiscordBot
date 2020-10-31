@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using DiscordBot.Extensions;
 using DiscordBot.InfiltratorGame.Data;
 using DiscordBot.Services;
-using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {

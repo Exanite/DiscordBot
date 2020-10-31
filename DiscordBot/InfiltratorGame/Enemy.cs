@@ -2,7 +2,6 @@
 using Discord;
 using DiscordBot.InfiltratorGame.Data;
 using DiscordBot.Services;
-using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
@@ -22,7 +21,7 @@ namespace DiscordBot.InfiltratorGame
         public event Action<Player, Enemy, int> Attacked;
         public event Action<Player, Enemy> Killed;
 
-        public EnemyData Data { get; }
+        public EnemyData Data { get; set; }
 
         public void OnAttacked(Player player)
         {
