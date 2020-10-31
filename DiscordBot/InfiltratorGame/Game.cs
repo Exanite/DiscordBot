@@ -35,9 +35,6 @@ namespace DiscordBot.InfiltratorGame
         public Enemy Enemy;
 
         [JsonProperty]
-        public int DifficultyLevel = 0;
-
-        [JsonProperty]
         public DateTimeOffset StartTime;
 
         public async Task CreateAndShowNewEnemy() // todo split into different methods
@@ -59,7 +56,6 @@ namespace DiscordBot.InfiltratorGame
                 .AddField("Running in", channel.Name)
                 .AddField("Started at", StartTime)
                 .AddField("Player count", playerManager.PlayersById.Count)
-                .AddField("Difficulty level", DifficultyLevel)
                 .Build();
         }
 
