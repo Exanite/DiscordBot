@@ -49,14 +49,14 @@ namespace DiscordBot.InfiltratorGame
 
             Health.Value -= damage;
 
-            LastActionMessage = $"Attacked by {player.Mention} for {damage} damage.";
+            LastActionMessage = $"Attacked by {player.User.Mention} for {damage} damage.";
             Attacked?.Invoke(player, this, damage);
 
             if (Health.Value < 0)
             {
-                player.Credits += Credits;
+                player.Data.Credits += Credits;
 
-                LastActionMessage = $"Killed by {player.Mention}.\nThey recieved {Credits} credits!";
+                LastActionMessage = $"Killed by {player.User.Mention}.\nThey recieved {Credits} credits!";
                 Killed?.Invoke(player, this);
             }
         }
