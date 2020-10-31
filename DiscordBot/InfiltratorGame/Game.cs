@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using DiscordBot.Extensions;
+using DiscordBot.InfiltratorGame.Data;
 using DiscordBot.Services;
 using Newtonsoft.Json;
 
@@ -20,7 +21,7 @@ namespace DiscordBot.InfiltratorGame
         private readonly EmbedHelper embedHelper;
         private readonly Enemy.Factory enemyFactory;
 
-        public Game(PlayerManager playerManager, EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
+        public Game(PlayerManager playerManager, EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel, GameData data)
         {
             this.playerManager = playerManager;
             this.embedHelper = embedHelper;
@@ -28,14 +29,12 @@ namespace DiscordBot.InfiltratorGame
 
             this.channel = channel;
 
-            StartTime = DateTimeOffset.Now;
+            Data = data;
         }
 
-        [JsonProperty]
-        public Enemy Enemy;
+        public GameData Data { get; set; }
 
-        [JsonProperty]
-        public DateTimeOffset StartTime;
+        public Enemy Enemy { get; set; }
 
         public async Task CreateAndShowNewEnemy() // todo split into different methods
         {
@@ -54,7 +53,7 @@ namespace DiscordBot.InfiltratorGame
         {
             return embedHelper.CreateBuilder("[Infiltrator Game Info]", "Shows information about the current game.")
                 .AddField("Running in", channel.Name)
-                .AddField("Started at", StartTime)
+                .AddField("Started at", Data.StartTime)
                 .AddField("Player count", playerManager.PlayersById.Count)
                 .Build();
         }

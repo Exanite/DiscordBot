@@ -21,9 +21,9 @@ namespace DiscordBot.InfiltratorGame
         [JsonProperty]
         public Dictionary<ulong, Game> Games { get; } = new Dictionary<ulong, Game>();
 
-        public Game CreateGame(ITextChannel channel)
+        public Game CreateGame(IGuild guild, IMessageChannel channel)
         {
-            var game = gameFactory.CreateGame(channel);
+            var game = gameFactory.CreateGame(guild, channel);
             Games[channel.Id] = game;
 
             return game;
