@@ -1,37 +1,26 @@
-﻿using Discord;
-using Newtonsoft.Json;
+﻿using System;
+using Discord;
+using DiscordBot.InfiltratorGame.Models;
 
 namespace DiscordBot.InfiltratorGame
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public class Player
     {
-        public Player(IUser user)
+        public Player(IUser user, PlayerData data)
         {
+            if (user.Id != data.Id)
+            {
+                throw new ArgumentException("User.Id must match PlayerData.Id.");
+            }
+
             User = user;
 
-            Id = user.Id;
-            Username = user.Username;
-            Discriminator = user.Discriminator;
-            Mention = user.Mention;
+            Data = data;
         }
 
-        [JsonProperty]
-        public ulong Id { get; }
+        public IUser User { get; }
 
-        [JsonProperty]
-        public int Credits { get; set; }
-
-        public IUser User { get; } // ? not sure about using this here
-        public string Username { get; }
-        public string Discriminator { get; }
-        public string Mention { get; }
-        public string FullUsername => $"{Username}:{Discriminator}";
-
-        public override string ToString()
-        {
-            return FullUsername;
-        }
+        public PlayerData Data { get; set; }
 
         public Embed ToEmbed()
         {
@@ -39,12 +28,12 @@ namespace DiscordBot.InfiltratorGame
                 .WithAuthor(new EmbedAuthorBuilder()
                 {
                     IconUrl = User.GetAvatarUrl(),
-                    Name = $"[{Username}]",
+                    Name = $"[{User.Username}]",
                 })
                 .WithColor(Color.Blue)
                 .WithCurrentTimestamp();
 
-            builder.AddField("Credits", Credits);
+            builder.AddField("Credits", Data.Credits);
 
             return builder.Build();
         }

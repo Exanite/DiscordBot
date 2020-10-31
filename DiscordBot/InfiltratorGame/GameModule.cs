@@ -23,7 +23,7 @@ namespace DiscordBot.InfiltratorGame
         public async Task StartGame()
         {
             await Context.Channel.SendMessageAsync("Starting a new game of Infiltrator.");
-            gameManager.CreateGame((ITextChannel)Context.Channel).CreateAndShowNewEnemy().Forget();
+            gameManager.CreateGame(Context.Guild, Context.Channel).CreateAndShowNewEnemy().Forget();
         }
 
         [Command("GameInfo"), Alias("Game")]

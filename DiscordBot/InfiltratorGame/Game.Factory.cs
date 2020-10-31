@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using System;
+using Discord;
+using DiscordBot.InfiltratorGame.Data;
 using DiscordBot.Services;
 
 namespace DiscordBot.InfiltratorGame
@@ -18,9 +20,12 @@ namespace DiscordBot.InfiltratorGame
                 this.playerManager = playerManager;
             }
 
-            public Game CreateGame(ITextChannel channel)
+            public Game CreateGame(IGuild guild, IMessageChannel channel)
             {
-                return new Game(playerManager, embedHelper, enemyFactory, channel);
+                var gameData = new GameData(guild.Id, channel.Id, DateTimeOffset.Now);
+                var game = new Game(playerManager, embedHelper, enemyFactory, channel, gameData);
+
+                return game;
             }
         }
     }

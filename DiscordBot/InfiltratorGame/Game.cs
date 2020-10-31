@@ -1,14 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using DiscordBot.Extensions;
+using DiscordBot.InfiltratorGame.Data;
 using DiscordBot.Services;
-using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Game
     {
         public static readonly IEmote AttackEmote = new Emoji("⚔️");
@@ -20,7 +18,7 @@ namespace DiscordBot.InfiltratorGame
         private readonly EmbedHelper embedHelper;
         private readonly Enemy.Factory enemyFactory;
 
-        public Game(PlayerManager playerManager, EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel)
+        public Game(PlayerManager playerManager, EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel, GameData data)
         {
             this.playerManager = playerManager;
             this.embedHelper = embedHelper;
@@ -28,17 +26,12 @@ namespace DiscordBot.InfiltratorGame
 
             this.channel = channel;
 
-            StartTime = DateTimeOffset.Now;
+            Data = data;
         }
 
-        [JsonProperty]
-        public Enemy Enemy;
+        public GameData Data { get; set; }
 
-        [JsonProperty]
-        public int DifficultyLevel = 0;
-
-        [JsonProperty]
-        public DateTimeOffset StartTime;
+        public Enemy Enemy { get; set; }
 
         public async Task CreateAndShowNewEnemy() // todo split into different methods
         {
@@ -57,9 +50,8 @@ namespace DiscordBot.InfiltratorGame
         {
             return embedHelper.CreateBuilder("[Infiltrator Game Info]", "Shows information about the current game.")
                 .AddField("Running in", channel.Name)
-                .AddField("Started at", StartTime)
+                .AddField("Started at", Data.StartTime)
                 .AddField("Player count", playerManager.PlayersById.Count)
-                .AddField("Difficulty level", DifficultyLevel)
                 .Build();
         }
 
@@ -83,7 +75,7 @@ namespace DiscordBot.InfiltratorGame
                     enemyMessage.ModifyAsync(x => x.Embed = Enemy.ToEmbed()),
                     enemyMessage.RemoveReactionAsync(reaction.Emote, reaction.User.GetValueOrDefault()));
 
-                if (Enemy.Health.Value <= 0)
+                if (Enemy.Data.Health.Value <= 0)
                 {
                     await CreateAndShowNewEnemy();
                 }

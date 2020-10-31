@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -6,7 +7,6 @@ using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public class GameManager
     {
         private readonly Game.Factory gameFactory;
@@ -18,12 +18,11 @@ namespace DiscordBot.InfiltratorGame
             client.ReactionAdded += OnReactionAdded;
         }
 
-        [JsonProperty]
         public Dictionary<ulong, Game> Games { get; } = new Dictionary<ulong, Game>();
 
-        public Game CreateGame(ITextChannel channel)
+        public Game CreateGame(IGuild guild, IMessageChannel channel)
         {
-            var game = gameFactory.CreateGame(channel);
+            var game = gameFactory.CreateGame(guild, channel);
             Games[channel.Id] = game;
 
             return game;
@@ -31,12 +30,16 @@ namespace DiscordBot.InfiltratorGame
 
         public string ToJson()
         {
-            return JsonConvert.SerializeObject(Games, Formatting.Indented);
+            throw new NotImplementedException();
+
+            //return JsonConvert.SerializeObject(Games, Formatting.Indented);
         }
 
         public void FromJson(string json)
         {
-            JsonConvert.PopulateObject(json, this);
+            throw new NotImplementedException();
+
+            //JsonConvert.PopulateObject(json, this);
         }
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
