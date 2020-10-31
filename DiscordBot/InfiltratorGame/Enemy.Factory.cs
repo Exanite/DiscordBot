@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DiscordBot.InfiltratorGame.Data;
 using DiscordBot.Services;
 
 namespace DiscordBot.InfiltratorGame
@@ -97,13 +98,13 @@ namespace DiscordBot.InfiltratorGame
 
             public Enemy Create(Game game)
             {
-                var enemy = new Enemy(embedHelper, random);
                 string name = GetRandomName();
                 int health = random.Next(5, 15);
                 int credits = random.Next(5, 15) + health;
 
-                enemy.Construct(name, health, credits);
-
+                var enemyData = new EnemyData(name, health, credits);
+                var enemy = new Enemy(embedHelper, random, enemyData);
+ 
                 return enemy;
             }
 

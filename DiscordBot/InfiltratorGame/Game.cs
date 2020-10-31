@@ -83,7 +83,7 @@ namespace DiscordBot.InfiltratorGame
                     enemyMessage.ModifyAsync(x => x.Embed = Enemy.ToEmbed()),
                     enemyMessage.RemoveReactionAsync(reaction.Emote, reaction.User.GetValueOrDefault()));
 
-                if (Enemy.Health.Value <= 0)
+                if (Enemy.Data.Health.Value <= 0)
                 {
                     await CreateAndShowNewEnemy();
                 }
