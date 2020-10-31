@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -29,12 +30,16 @@ namespace DiscordBot.InfiltratorGame
 
         public string ToJson()
         {
-            return JsonConvert.SerializeObject(Games, Formatting.Indented);
+            throw new NotImplementedException();
+
+            //return JsonConvert.SerializeObject(Games, Formatting.Indented);
         }
 
         public void FromJson(string json)
         {
-            JsonConvert.PopulateObject(json, this);
+            throw new NotImplementedException();
+
+            //JsonConvert.PopulateObject(json, this);
         }
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
