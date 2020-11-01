@@ -2,7 +2,6 @@
 
 namespace DiscordBot.InfiltratorGame
 {
-    [Serializable]
     public class Stat
     {
         public string Name { get; set; }
