@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Discord;
 using DiscordBot.InfiltratorGame.Models;
 using Newtonsoft.Json;
@@ -20,6 +21,27 @@ namespace DiscordBot.InfiltratorGame
             else
             {
                 return CreateFor(user);
+            }
+        }
+
+        public string SaveToJson()
+        {
+            var playerDataCollection = PlayerDictionary.Select(x => x.Value.Data).ToList();
+
+            return JsonConvert.SerializeObject(playerDataCollection, Formatting.Indented);
+        }
+
+        public void LoadFromJson(string json)
+        {
+            PlayerDictionary.Clear();
+
+            var playerDataCollection = JsonConvert.DeserializeObject<List<PlayerData>>(json);
+
+            foreach (var playerData in playerDataCollection)
+            {
+                //var player = playerFactory.Create(playerData);
+
+                //PlayerDictionary[player.Data.Id] = player;
             }
         }
 
