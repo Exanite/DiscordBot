@@ -12,11 +12,9 @@ namespace DiscordBot.AutofacModules
 {
     public class DiscordBotAutofacModule : Module
     {
-        public const string ConfigFilePath = @"Configs\DiscordBot\Config.json";
-
         protected override void Load(ContainerBuilder builder)
         {
-            var reader = new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, ConfigFilePath);
+            var reader = new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, Constants.ConfigFilePath);
             var config = reader.Load(true);
 
             var client = new DiscordSocketClient(new DiscordSocketConfig()

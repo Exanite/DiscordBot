@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -34,7 +35,9 @@ namespace DiscordBot.Core.Services
         {
             if (string.IsNullOrEmpty(config.DiscordToken))
             {
-                throw new Exception($"Please enter a Discord Bot token into the config file at "); // ! {Program.ConfigFilePath}
+                string configFilePath = Path.GetFullPath(Constants.ConfigFilePath);
+
+                throw new Exception($"Please enter a Discord Bot token into the config file at {configFilePath}");
             }
 
             try
