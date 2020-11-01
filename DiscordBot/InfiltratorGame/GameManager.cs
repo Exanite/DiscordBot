@@ -23,7 +23,7 @@ namespace DiscordBot.InfiltratorGame
 
         public Game CreateGame(IGuild guild, IMessageChannel channel)
         {
-            var game = gameFactory.CreateGame(guild, channel);
+            var game = gameFactory.Create(guild, channel);
             Games[channel.Id] = game;
 
             return game;

@@ -20,7 +20,7 @@ namespace DiscordBot.InfiltratorGame
                 this.playerManager = playerManager;
             }
 
-            public Game CreateGame(IGuild guild, IMessageChannel channel)
+            public Game Create(IGuild guild, IMessageChannel channel)
             {
                 var gameData = new GameData(guild.Id, channel.Id, DateTimeOffset.Now);
                 var game = new Game(playerManager, embedHelper, enemyFactory, channel, gameData);
