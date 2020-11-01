@@ -4,13 +4,13 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Discord.Commands;
 using Discord.WebSocket;
-using DiscordBot.Configuration;
+using DiscordBot.Core.Configuration;
+using DiscordBot.Core.Json;
+using DiscordBot.Core.Logging;
+using DiscordBot.Core.Logging.Discord;
+using DiscordBot.Core.Logging.Serilog;
+using DiscordBot.Core.Services;
 using DiscordBot.InfiltratorGame;
-using DiscordBot.Json;
-using DiscordBot.Logging;
-using DiscordBot.Logging.Discord;
-using DiscordBot.Logging.Serilog;
-using DiscordBot.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -96,6 +96,8 @@ namespace DiscordBot
         private void InstallProgram(ContainerBuilder builder)
         {
             builder.Populate(new ServiceCollection());
+            builder.Register(_ => typeof(DiscordBotService).Assembly).SingleInstance(); // todo find better way of registering assemblies
+            builder.Register(_ => typeof(GameManager).Assembly).SingleInstance();
         }
 
         private void InstallLog(ContainerBuilder builder)

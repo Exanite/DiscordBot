@@ -23,14 +23,16 @@ jobs:
     # Cache
     # Setup .NET Core
     - uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: '3.1.x'
     # Install dependencies
     - run: dotnet restore
     # Build
-    - run: dotnet publish -c Release -r win10-x64 -p:PublishProfile=FolderProfile --no-restore
+    - run: dotnet publish -p:PublishProfile=FolderProfile --no-restore
     # Test
     - run: dotnet test --no-restore --verbosity normal
     # Upload
     - uses: actions/upload-artifact@v2.1.4
       with:
         name: Build
-        path: DiscordBot/bin/Release/netcoreapp2.0/publish
+        path: DiscordBot/bin/Publish
