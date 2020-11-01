@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Text;
 using DiscordBot.Logging;
 
 namespace DiscordBot.InfiltratorGame

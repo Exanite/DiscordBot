@@ -31,7 +31,7 @@ namespace DiscordBot.Services
         {
             if (string.IsNullOrEmpty(config.DiscordToken))
             {
-                throw new Exception($"Please enter a Discord Bot token into the config file at {Program.ConfigFilePath}");
+                throw new Exception($"Please enter a Discord Bot token into the config file at "); // ! {Program.ConfigFilePath}
             }
 
             try
