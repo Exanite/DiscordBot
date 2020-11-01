@@ -1,8 +1,13 @@
-﻿namespace DiscordBot.InfiltratorGame.Data
+﻿using Newtonsoft.Json;
+
+namespace DiscordBot.InfiltratorGame.Data
 {
     public class EnemyData
     {
         public const string DefaultActionMessage = "A wild Infiltrator has appeared!";
+
+        [JsonConstructor]
+        private EnemyData() { }
 
         public EnemyData(string name, int health, int credits)
         {

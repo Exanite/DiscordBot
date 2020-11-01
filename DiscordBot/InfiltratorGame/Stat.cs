@@ -1,7 +1,12 @@
-﻿namespace DiscordBot.InfiltratorGame
+﻿using Newtonsoft.Json;
+
+namespace DiscordBot.InfiltratorGame
 {
     public class Stat
     {
+        [JsonConstructor]
+        private Stat() { }
+
         public Stat(string name, int max)
         {
             Name = name;

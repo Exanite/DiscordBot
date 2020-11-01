@@ -1,9 +1,13 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame.Data
 {
     public class GameData
     {
+        [JsonConstructor]
+        private GameData() { }
+
         public GameData(ulong guildId, ulong channelId, DateTimeOffset startTime)
         {
             GuildId = guildId;
