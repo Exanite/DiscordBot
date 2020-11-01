@@ -4,7 +4,7 @@ using DiscordBot.InfiltratorGame.Models;
 
 namespace DiscordBot.InfiltratorGame
 {
-    public class Player
+    public partial class Player
     {
         public Player(IUser user, PlayerData data)
         {

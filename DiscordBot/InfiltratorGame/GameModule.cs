@@ -60,9 +60,11 @@ namespace DiscordBot.InfiltratorGame
         [Summary("Serializes the game and returns current game data in JSON format.")]
         public async Task Serialize()
         {
-            string json = gameManager.SaveToJson();
+            string gamesJson = gameManager.SaveToJson();
+            string playersJson = playerManager.SaveToJson();
 
-            await Context.Channel.SendMessageAsync($"```json\n{json}\n```");
+            await Context.Channel.SendMessageAsync($"Games:\n```json\n{gamesJson}\n```");
+            await Context.Channel.SendMessageAsync($"Players:\n```json\n{playersJson}\n```");
         }
     }
 }

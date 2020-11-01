@@ -10,18 +10,25 @@ namespace DiscordBot.InfiltratorGame
     {
         private readonly Dictionary<ulong, Player> PlayerDictionary = new Dictionary<ulong, Player>();
 
+        private readonly Player.Factory playerFactory;
+
+        public PlayerManager(Player.Factory playerFactory)
+        {
+            this.playerFactory = playerFactory;
+        }
+
         public IReadOnlyDictionary<ulong, Player> PlayersById => PlayerDictionary;
 
         public Player GetFor(IUser user)
         {
-            if (PlayerDictionary.TryGetValue(user.Id, out Player player))
+            if (!PlayerDictionary.TryGetValue(user.Id, out Player player))
             {
-                return player;
+                player = playerFactory.Create(user);
+
+                PlayerDictionary.Add(player.User.Id, player);
             }
-            else
-            {
-                return CreateFor(user);
-            }
+
+            return player;
         }
 
         public string SaveToJson()
@@ -39,20 +46,10 @@ namespace DiscordBot.InfiltratorGame
 
             foreach (var playerData in playerDataCollection)
             {
-                //var player = playerFactory.Create(playerData);
+                var player = playerFactory.Create(playerData);
 
-                //PlayerDictionary[player.Data.Id] = player;
+                PlayerDictionary[player.Data.Id] = player;
             }
-        }
-
-        private Player CreateFor(IUser user)
-        {
-            var playerData = new PlayerData(user.Id);
-            var player = new Player(user, playerData);
-
-            PlayerDictionary.Add(player.User.Id, player);
-
-            return player;
         }
     }
 }
