@@ -7,7 +7,7 @@
             Id = id;
         }
 
-        public ulong Id { get; }
+        public ulong Id { get; set; }
 
         public int Credits { get; set; }
     }
