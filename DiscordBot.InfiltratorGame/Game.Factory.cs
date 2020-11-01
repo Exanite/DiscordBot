@@ -1,8 +1,8 @@
 ﻿using System;
 using Discord;
 using Discord.WebSocket;
+using DiscordBot.Core.Services;
 using DiscordBot.InfiltratorGame.Data;
-using DiscordBot.Services;
 
 namespace DiscordBot.InfiltratorGame
 {

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
-using DiscordBot.Configuration;
-using DiscordBot.Logging.Serilog;
+using DiscordBot.Core.Configuration;
+using DiscordBot.Core.Logging.Serilog;
 using Serilog;
 using Serilog.Core;
 using Serilog.Formatting.Display;
 using Serilog.Formatting.Json;
 
-namespace DiscordBot.Services
+namespace DiscordBot.Core.Services
 {
     public class LoggingService
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DiscordBot.Logging
+namespace DiscordBot.Core.Logging
 {
     /// <summary>
     /// Contains extensions to the <see cref="ILog"/> interface so that implementers of the interface will not have to implement the following members

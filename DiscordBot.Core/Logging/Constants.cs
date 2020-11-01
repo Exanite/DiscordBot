@@ -1,7 +1,7 @@
-﻿namespace DiscordBot.Logging
+﻿namespace DiscordBot.Core.Logging
 {
     /// <summary>
-    /// Constants used by the DiscordBot.Logging namespace
+    /// Constants used by the DiscordBot.Core.Logging namespace
     /// </summary>
     public static class Constants
     {

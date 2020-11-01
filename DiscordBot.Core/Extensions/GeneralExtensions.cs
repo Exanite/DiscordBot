@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Discord;
 
-namespace DiscordBot.Extensions
+namespace DiscordBot.Core.Extensions
 {
     // Using one extensions class for now to keep things simple, will split if needed
     public static class GeneralExtensions

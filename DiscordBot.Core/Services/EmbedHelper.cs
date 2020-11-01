@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 
-namespace DiscordBot.Services
+namespace DiscordBot.Core.Services
 {
     public class EmbedHelper
     {

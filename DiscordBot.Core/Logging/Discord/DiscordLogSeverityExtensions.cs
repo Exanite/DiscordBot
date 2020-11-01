@@ -1,7 +1,7 @@
 ﻿using System;
 using Discord;
 
-namespace DiscordBot.Logging.Discord
+namespace DiscordBot.Core.Logging.Discord
 {
     /// <summary>
     /// Extensions for Discord's <see cref="LogSeverity"/>

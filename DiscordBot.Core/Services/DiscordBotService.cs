@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using DiscordBot.Configuration;
-using DiscordBot.Logging;
+using DiscordBot.Core.Configuration;
+using DiscordBot.Core.Logging;
 
-namespace DiscordBot.Services
+namespace DiscordBot.Core.Services
 {
     public class DiscordBotService
     {

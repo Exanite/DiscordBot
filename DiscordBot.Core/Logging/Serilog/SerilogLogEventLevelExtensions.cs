@@ -1,6 +1,6 @@
 ﻿using Serilog.Events;
 
-namespace DiscordBot.Logging.Serilog
+namespace DiscordBot.Core.Logging.Serilog
 {
     /// <summary>
     /// Extensions for Serilog's <see cref="LogEventLevel"/>

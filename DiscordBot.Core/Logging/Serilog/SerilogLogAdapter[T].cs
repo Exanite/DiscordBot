@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace DiscordBot.Logging.Serilog
+namespace DiscordBot.Core.Logging.Serilog
 {
     public class SerilogLogAdapter<T> : SerilogLogAdapter, ILog<T>
     {

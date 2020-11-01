@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using DiscordBot.Extensions;
+using DiscordBot.Core.Extensions;
 
 namespace DiscordBot.InfiltratorGame
 {

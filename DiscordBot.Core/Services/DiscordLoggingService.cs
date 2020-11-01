@@ -2,11 +2,11 @@
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using DiscordBot.Logging;
-using DiscordBot.Logging.Discord;
-using DiscordBot.Logging.Serilog;
+using DiscordBot.Core.Logging;
+using DiscordBot.Core.Logging.Discord;
+using DiscordBot.Core.Logging.Serilog;
 
-namespace DiscordBot.Services
+namespace DiscordBot.Core.Services
 {
     public class DiscordLoggingService
     {

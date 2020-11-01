@@ -3,7 +3,7 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
 
-namespace DiscordBot.Logging.Serilog
+namespace DiscordBot.Core.Logging.Serilog
 {
     public class ColoredConsoleSink : ILogEventSink
     {

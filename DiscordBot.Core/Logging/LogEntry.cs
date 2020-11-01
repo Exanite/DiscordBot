@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DiscordBot.Logging
+namespace DiscordBot.Core.Logging
 {
     /// <summary>
     /// A log entry

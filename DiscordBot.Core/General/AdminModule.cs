@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.Net;
-using DiscordBot.Extensions;
+using DiscordBot.Core.Extensions;
 
-namespace DiscordBot.General
+namespace DiscordBot.Core.General
 {
     [Group("Admin")]
     [Summary("Commands used for administering the state of a Discord guild.")]

@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.Commands;
-using DiscordBot.Logging;
+using DiscordBot.Core.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 
-namespace DiscordBot.Configuration
+namespace DiscordBot.Core.Configuration
 {
     [Serializable]
     public class DiscordBotConfig

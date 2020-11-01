@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using DiscordBot.Core.Services;
 using DiscordBot.InfiltratorGame.Data;
-using DiscordBot.Services;
 
 namespace DiscordBot.InfiltratorGame
 {

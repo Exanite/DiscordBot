@@ -2,7 +2,7 @@
 using Serilog.Core;
 using Serilog.Events;
 
-namespace DiscordBot.Logging.Serilog
+namespace DiscordBot.Core.Logging.Serilog
 {
     /// <summary>
     /// Adds a shorter non-namespaced property, 'ShortContext', based off of the <see cref="LogEvent"/>'s 'SourceContext' property

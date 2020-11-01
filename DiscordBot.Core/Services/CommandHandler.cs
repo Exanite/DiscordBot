@@ -1,12 +1,12 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using DiscordBot.Configuration;
-using DiscordBot.Extensions;
+using DiscordBot.Core.Configuration;
+using DiscordBot.Core.Extensions;
 using System;
 using System.Threading.Tasks;
 
-namespace DiscordBot.Services
+namespace DiscordBot.Core.Services
 {
     public class CommandHandler
     {

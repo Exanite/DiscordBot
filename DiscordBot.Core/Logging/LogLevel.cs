@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DiscordBot.Logging
+namespace DiscordBot.Core.Logging
 {
     //! Documentation is copied from Serilog.Events.LogEventLevel
     //! Should be replaced later on

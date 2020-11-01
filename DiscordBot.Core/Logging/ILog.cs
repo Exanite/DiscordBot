@@ -1,4 +1,4 @@
-﻿namespace DiscordBot.Logging
+﻿namespace DiscordBot.Core.Logging
 {
     /// <summary>
     /// Common interface for Loggers

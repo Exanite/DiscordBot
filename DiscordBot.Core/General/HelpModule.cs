@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Commands;
-using DiscordBot.Configuration;
-using DiscordBot.Services;
+using DiscordBot.Core.Configuration;
+using DiscordBot.Core.Services;
 using Color = Discord.Color;
 
-namespace DiscordBot.General
+namespace DiscordBot.Core.General
 {
     [Name("Help")]
     [Summary("Commands used to show how to use this bot.")]

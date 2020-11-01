@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 
-namespace DiscordBot.Json
+namespace DiscordBot.Core.Json
 {
     public static class JsonReader
     {
