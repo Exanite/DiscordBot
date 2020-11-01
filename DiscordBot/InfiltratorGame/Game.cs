@@ -15,6 +15,8 @@ namespace DiscordBot.InfiltratorGame
         private IUserMessage enemyMessage;
         private IMessageChannel channel;
 
+        private Enemy enemy;
+
         private readonly PlayerManager playerManager;
         private readonly EmbedHelper embedHelper;
         private readonly Enemy.Factory enemyFactory;
@@ -33,11 +35,28 @@ namespace DiscordBot.InfiltratorGame
             this.channel = channel;
 
             Data = data;
+
+            if (data.EnemyData != null)
+            {
+                Enemy = enemyFactory.Create(data.EnemyData);
+            }
         }
 
         public GameData Data { get; set; }
 
-        public Enemy Enemy { get; set; }
+        public Enemy Enemy
+        {
+            get
+            {
+                return enemy;
+            }
+
+            set
+            {
+                enemy = value;
+                Data.EnemyData = enemy.Data;
+            }
+        }
 
         public async Task CreateAndShowNewEnemy() // todo split into different methods
         {
@@ -46,8 +65,7 @@ namespace DiscordBot.InfiltratorGame
                 enemyMessage.RemoveAllReactionsAsync().Forget();
             }
 
-            Enemy = enemyFactory.Create(this);
-            Data.EnemyData = Enemy.Data;
+            Enemy = enemyFactory.Create();
 
             enemyMessage = await channel.SendMessageAsync(embed: Enemy.ToEmbed());
             await enemyMessage.AddReactionAsync(AttackEmote);
