@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using DiscordBot.InfiltratorGame.Data;
 using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
@@ -28,18 +29,18 @@ namespace DiscordBot.InfiltratorGame
             return game;
         }
 
-        public string ToJson()
+        public string SaveToJson()
         {
-            throw new NotImplementedException();
+            var gameData = Games.Select(x => x.Value.Data).ToList();
 
-            //return JsonConvert.SerializeObject(Games, Formatting.Indented);
+            return JsonConvert.SerializeObject(gameData, Formatting.Indented);
         }
 
-        public void FromJson(string json)
+        public void LoadFromJson(string json)
         {
-            throw new NotImplementedException();
+            var gameData = JsonConvert.DeserializeObject<List<GameData>>(json);
 
-            //JsonConvert.PopulateObject(json, this);
+            // todo iterate and create Games from gameData entries
         }
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
