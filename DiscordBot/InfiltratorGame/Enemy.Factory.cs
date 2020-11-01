@@ -103,9 +103,8 @@ namespace DiscordBot.InfiltratorGame
                 int credits = random.Next(5, 15) + health;
 
                 var enemyData = new EnemyData(name, health, credits);
-                var enemy = new Enemy(embedHelper, random, enemyData);
- 
-                return enemy;
+
+                return new Enemy(embedHelper, random, enemyData);
             }
 
             public string GetRandomName()
