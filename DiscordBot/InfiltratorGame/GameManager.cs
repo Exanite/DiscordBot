@@ -31,16 +31,23 @@ namespace DiscordBot.InfiltratorGame
 
         public string SaveToJson()
         {
-            var gameData = Games.Select(x => x.Value.Data).ToList();
+            var gameDataCollection = Games.Select(x => x.Value.Data).ToList();
 
-            return JsonConvert.SerializeObject(gameData, Formatting.Indented);
+            return JsonConvert.SerializeObject(gameDataCollection, Formatting.Indented);
         }
 
         public void LoadFromJson(string json)
         {
-            var gameData = JsonConvert.DeserializeObject<List<GameData>>(json);
+            Games.Clear();
 
-            // todo iterate and create Games from gameData entries
+            var gameDataCollection = JsonConvert.DeserializeObject<List<GameData>>(json);
+
+            foreach (var gameData in gameDataCollection)
+            {
+                var game = gameFactory.Create(gameData);
+
+                Games[game.Data.ChannelId] = game;
+            }
         }
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)
