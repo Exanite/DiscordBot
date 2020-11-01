@@ -47,6 +47,7 @@ namespace DiscordBot.InfiltratorGame
             }
 
             Enemy = enemyFactory.Create(this);
+            Data.EnemyData = Enemy.Data;
 
             enemyMessage = await channel.SendMessageAsync(embed: Enemy.ToEmbed());
             await enemyMessage.AddReactionAsync(AttackEmote);
