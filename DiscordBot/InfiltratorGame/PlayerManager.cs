@@ -33,7 +33,7 @@ namespace DiscordBot.InfiltratorGame
 
         public string SaveToJson()
         {
-            var playerDataCollection = PlayerDictionary.Select(x => x.Value.Data).ToList();
+            List<PlayerData> playerDataCollection = PlayerDictionary.Select(x => x.Value.Data).ToList();
 
             return JsonConvert.SerializeObject(playerDataCollection, Formatting.Indented);
         }
@@ -42,7 +42,7 @@ namespace DiscordBot.InfiltratorGame
         {
             PlayerDictionary.Clear();
 
-            var playerDataCollection = JsonConvert.DeserializeObject<List<PlayerData>>(json);
+            List<PlayerData> playerDataCollection = JsonConvert.DeserializeObject<List<PlayerData>>(json);
 
             foreach (var playerData in playerDataCollection)
             {
