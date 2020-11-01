@@ -10,7 +10,7 @@ namespace DiscordBot.InfiltratorGame
         {
             if (user.Id != data.Id)
             {
-                throw new ArgumentException("User.Id must match PlayerData.Id.");
+                throw new ArgumentException("user.Id must match data.Id.");
             }
 
             User = user;

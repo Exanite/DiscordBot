@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using DiscordBot.Extensions;
@@ -20,6 +21,11 @@ namespace DiscordBot.InfiltratorGame
 
         public Game(PlayerManager playerManager, EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel, GameData data)
         {
+            if (channel.Id != data.ChannelId)
+            {
+                throw new ArgumentException("channel.Id  must match data.ChannelId.");
+            }
+
             this.playerManager = playerManager;
             this.embedHelper = embedHelper;
             this.enemyFactory = enemyFactory;
