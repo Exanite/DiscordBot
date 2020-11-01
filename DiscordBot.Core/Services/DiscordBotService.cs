@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -12,14 +13,16 @@ namespace DiscordBot.Services
 {
     public class DiscordBotService
     {
+        private readonly IEnumerable<Assembly> assemblies;
         private readonly IServiceProvider provider;
         private readonly DiscordSocketClient client;
         private readonly CommandService commands;
         private readonly DiscordBotConfig config;
         private readonly ILog log;
 
-        public DiscordBotService(IServiceProvider provider, DiscordSocketClient client, CommandService commands, DiscordBotConfig config, ILog<DiscordBotService> log)
+        public DiscordBotService(IEnumerable<Assembly> assemblies, IServiceProvider provider, DiscordSocketClient client, CommandService commands, DiscordBotConfig config, ILog<DiscordBotService> log)
         {
+            this.assemblies = assemblies;
             this.provider = provider;
             this.client = client;
             this.commands = commands;
@@ -44,7 +47,10 @@ namespace DiscordBot.Services
                 log.Fatal("Unable to connect to Discord servers.");
             }
 
-            await commands.AddModulesAsync(Assembly.GetExecutingAssembly(), provider);
+            foreach (var assembly in assemblies)
+            {
+                await commands.AddModulesAsync(assembly, provider);
+            }
         }
 
         public async Task Stop()

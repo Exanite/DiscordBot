@@ -96,6 +96,8 @@ namespace DiscordBot
         private void InstallProgram(ContainerBuilder builder)
         {
             builder.Populate(new ServiceCollection());
+            builder.Register(_ => typeof(DiscordBotService).Assembly).SingleInstance(); // todo find better way of registering assemblies
+            builder.Register(_ => typeof(GameManager).Assembly).SingleInstance();
         }
 
         private void InstallLog(ContainerBuilder builder)
