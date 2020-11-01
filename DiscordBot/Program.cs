@@ -144,6 +144,7 @@ namespace DiscordBot
         {
             builder.RegisterType<GameManager>().SingleInstance();
             builder.RegisterType<PlayerManager>().SingleInstance();
+            builder.RegisterType<SaveManager>().SingleInstance();
 
             builder.RegisterType<Game.Factory>().SingleInstance();
             builder.RegisterType<Player.Factory>().SingleInstance();
