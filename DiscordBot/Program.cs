@@ -1,25 +1,14 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Discord.Commands;
-using Discord.WebSocket;
-using DiscordBot.Core.Configuration;
-using DiscordBot.Core.Json;
 using DiscordBot.Core.Logging;
-using DiscordBot.Core.Logging.Discord;
-using DiscordBot.Core.Logging.Serilog;
 using DiscordBot.Core.Services;
-using DiscordBot.InfiltratorGame;
-using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 
 namespace DiscordBot
 {
     public class Program
     {
-        public const string ConfigFilePath = @"Configs\DiscordBot\Config.json";
-
         private IContainer container;
         private ILog log;
         private DiscordBotService bot;
@@ -84,78 +73,9 @@ namespace DiscordBot
         {
             var builder = new ContainerBuilder();
 
-            InstallProgram(builder);
-            InstallLog(builder);
-            InstallDiscordBot(builder);
-            InstallInfiltratorGame(builder);
-            InstallMiscellaneous(builder);
+            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
 
             return builder.Build();
-        }
-
-        private void InstallProgram(ContainerBuilder builder)
-        {
-            builder.Populate(new ServiceCollection());
-            builder.Register(_ => typeof(DiscordBotService).Assembly).SingleInstance(); // todo find better way of registering assemblies
-            builder.Register(_ => typeof(GameManager).Assembly).SingleInstance();
-        }
-
-        private void InstallLog(ContainerBuilder builder)
-        {
-            builder.RegisterType<LoggingService>().SingleInstance();
-            builder.Register(x => x.Resolve<LoggingService>().Logger).As<ILogger>().SingleInstance();
-
-            builder.RegisterType<SerilogLogAdapter>().As<ILog>();
-            builder.RegisterGeneric(typeof(SerilogLogAdapter<>)).As(typeof(ILog<>)).SingleInstance();
-        }
-
-        private void InstallDiscordBot(ContainerBuilder builder)
-        {
-            var reader = new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, ConfigFilePath);
-            var config = reader.Load(true);
-
-            var client = new DiscordSocketClient(new DiscordSocketConfig()
-            {
-                LogLevel = config.Log.LogLevel.ToLogSeverity(),
-                MessageCacheSize = config.Socket.MessageCacheSize,
-                AlwaysDownloadUsers = config.Socket.AlwaysDownloadUsers,
-                ConnectionTimeout = config.Socket.ConnectionTimeOut,
-                DefaultRetryMode = config.Socket.DefaultRetryMode,
-            });
-
-            var commandService = new CommandService(new CommandServiceConfig
-            {
-                LogLevel = config.Log.LogLevel.ToLogSeverity(),
-                CaseSensitiveCommands = config.Commands.CaseSensitive,
-                DefaultRunMode = config.Commands.DefaultRunMode,
-            });
-
-            builder.RegisterInstance(config).SingleInstance();
-            builder.RegisterInstance(reader).SingleInstance();
-
-            builder.RegisterInstance(client).SingleInstance();
-            builder.RegisterInstance(commandService).SingleInstance();
-
-            builder.RegisterType<DiscordLoggingService>().SingleInstance();
-            builder.RegisterType<CommandHandler>().SingleInstance();
-            builder.RegisterType<DiscordBotService>().SingleInstance();
-            builder.RegisterType<EmbedHelper>().SingleInstance();
-        }
-
-        private void InstallInfiltratorGame(ContainerBuilder builder)
-        {
-            builder.RegisterType<GameManager>().SingleInstance();
-            builder.RegisterType<PlayerManager>().SingleInstance();
-            builder.RegisterType<SaveManager>().SingleInstance();
-
-            builder.RegisterType<Game.Factory>().SingleInstance();
-            builder.RegisterType<Player.Factory>().SingleInstance();
-            builder.RegisterType<Enemy.Factory>().SingleInstance();
-        }
-
-        private void InstallMiscellaneous(ContainerBuilder builder)
-        {
-            builder.RegisterType<Random>().SingleInstance();
         }
     }
 }
