@@ -18,7 +18,7 @@ namespace DiscordBot
 {
     public class Program
     {
-        public const string ConfigPath = @"Configs\DiscordBot\Config.json";
+        public const string ConfigFilePath = @"Configs\DiscordBot\Config.json";
 
         private IContainer container;
         private ILog log;
@@ -109,7 +109,7 @@ namespace DiscordBot
 
         private void InstallDiscordBot(ContainerBuilder builder)
         {
-            var reader = new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, ConfigPath);
+            var reader = new JsonReader<DiscordBotConfig>(AppContext.BaseDirectory, ConfigFilePath);
             var config = reader.Load(true);
 
             var client = new DiscordSocketClient(new DiscordSocketConfig()
@@ -144,7 +144,10 @@ namespace DiscordBot
         {
             builder.RegisterType<GameManager>().SingleInstance();
             builder.RegisterType<PlayerManager>().SingleInstance();
+            builder.RegisterType<SaveManager>().SingleInstance();
+
             builder.RegisterType<Game.Factory>().SingleInstance();
+            builder.RegisterType<Player.Factory>().SingleInstance();
             builder.RegisterType<Enemy.Factory>().SingleInstance();
         }
 

@@ -4,13 +4,13 @@ using DiscordBot.InfiltratorGame.Models;
 
 namespace DiscordBot.InfiltratorGame
 {
-    public class Player
+    public partial class Player
     {
         public Player(IUser user, PlayerData data)
         {
             if (user.Id != data.Id)
             {
-                throw new ArgumentException("User.Id must match PlayerData.Id.");
+                throw new ArgumentException("user.Id must match data.Id.");
             }
 
             User = user;

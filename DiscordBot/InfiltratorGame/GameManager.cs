@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using DiscordBot.InfiltratorGame.Data;
 using Newtonsoft.Json;
 
 namespace DiscordBot.InfiltratorGame
@@ -22,24 +23,31 @@ namespace DiscordBot.InfiltratorGame
 
         public Game CreateGame(IGuild guild, IMessageChannel channel)
         {
-            var game = gameFactory.CreateGame(guild, channel);
+            var game = gameFactory.Create(guild, channel);
             Games[channel.Id] = game;
 
             return game;
         }
 
-        public string ToJson()
+        public string SaveToJson()
         {
-            throw new NotImplementedException();
+            List<GameData> gameDataCollection = Games.Select(x => x.Value.Data).ToList();
 
-            //return JsonConvert.SerializeObject(Games, Formatting.Indented);
+            return JsonConvert.SerializeObject(gameDataCollection, Formatting.Indented);
         }
 
-        public void FromJson(string json)
+        public void LoadFromJson(string json)
         {
-            throw new NotImplementedException();
+            Games.Clear();
 
-            //JsonConvert.PopulateObject(json, this);
+            List<GameData> gameDataCollection = JsonConvert.DeserializeObject<List<GameData>>(json);
+
+            foreach (var gameData in gameDataCollection)
+            {
+                var game = gameFactory.Create(gameData);
+
+                Games[game.Data.ChannelId] = game;
+            }
         }
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cacheable, ISocketMessageChannel channel, SocketReaction reaction)

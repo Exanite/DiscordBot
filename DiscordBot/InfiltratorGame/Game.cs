@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using DiscordBot.Extensions;
@@ -14,12 +15,19 @@ namespace DiscordBot.InfiltratorGame
         private IUserMessage enemyMessage;
         private IMessageChannel channel;
 
+        private Enemy enemy;
+
         private readonly PlayerManager playerManager;
         private readonly EmbedHelper embedHelper;
         private readonly Enemy.Factory enemyFactory;
 
         public Game(PlayerManager playerManager, EmbedHelper embedHelper, Enemy.Factory enemyFactory, IMessageChannel channel, GameData data)
         {
+            if (channel.Id != data.ChannelId)
+            {
+                throw new ArgumentException("channel.Id  must match data.ChannelId.");
+            }
+
             this.playerManager = playerManager;
             this.embedHelper = embedHelper;
             this.enemyFactory = enemyFactory;
@@ -27,11 +35,28 @@ namespace DiscordBot.InfiltratorGame
             this.channel = channel;
 
             Data = data;
+
+            if (data.EnemyData != null)
+            {
+                Enemy = enemyFactory.Create(data.EnemyData);
+            }
         }
 
         public GameData Data { get; set; }
 
-        public Enemy Enemy { get; set; }
+        public Enemy Enemy
+        {
+            get
+            {
+                return enemy;
+            }
+
+            set
+            {
+                enemy = value;
+                Data.EnemyData = enemy.Data;
+            }
+        }
 
         public async Task CreateAndShowNewEnemy() // todo split into different methods
         {
@@ -40,7 +65,7 @@ namespace DiscordBot.InfiltratorGame
                 enemyMessage.RemoveAllReactionsAsync().Forget();
             }
 
-            Enemy = enemyFactory.Create(this);
+            Enemy = enemyFactory.Create();
 
             enemyMessage = await channel.SendMessageAsync(embed: Enemy.ToEmbed());
             await enemyMessage.AddReactionAsync(AttackEmote);
