@@ -1,7 +1,7 @@
 ﻿using System;
 using Autofac;
 
-namespace DiscordBot.AutofacModules
+namespace DiscordBot.AutofacModules.Core
 {
     public class MiscellaneousAutofacModule : Module
     {

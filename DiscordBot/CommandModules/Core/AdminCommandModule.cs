@@ -9,7 +9,7 @@ namespace DiscordBot.CommandModules.Core
 {
     [Group("Admin")]
     [Summary("Commands used for administering the state of a Discord guild.")]
-    public class AdminModule : ModuleBase<SocketCommandContext>
+    public class AdminCommandModule : ModuleBase<SocketCommandContext>
     {
         [Command("Kick")]
         [Summary("Kicks a specified user.")]

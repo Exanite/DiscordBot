@@ -7,7 +7,7 @@ namespace DiscordBot.CommandModules.Core
 {
     [Group("Bot")]
     [Summary("Commands for accessing or editing the state of this Discord bot.")]
-    public class BotModule : ModuleBase<SocketCommandContext>
+    public class BotCommandModule : ModuleBase<SocketCommandContext>
     {
         [Command("Ping")]
         [Summary("Shows the current ping of this bot to the Discord servers.")]

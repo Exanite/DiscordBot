@@ -2,7 +2,7 @@
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DiscordBot.AutofacModules
+namespace DiscordBot.AutofacModules.Core
 {
     public class ProgramAutofacModule : Module
     {

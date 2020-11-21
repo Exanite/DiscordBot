@@ -11,13 +11,13 @@ namespace DiscordBot.CommandModules.Core
 {
     [Name("Help")]
     [Summary("Commands used to show how to use this bot.")]
-    public class HelpModule : ModuleBase<SocketCommandContext>
+    public class HelpCommandModule : ModuleBase<SocketCommandContext>
     {
         private readonly CommandService commands;
         private readonly DiscordBotConfig config;
         private readonly EmbedHelper embedHelper;
 
-        public HelpModule(CommandService commands, DiscordBotConfig config, EmbedHelper embedHelper)
+        public HelpCommandModule(CommandService commands, DiscordBotConfig config, EmbedHelper embedHelper)
         {
             this.commands = commands;
             this.config = config;
