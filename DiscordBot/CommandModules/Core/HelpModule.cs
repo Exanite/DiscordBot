@@ -7,7 +7,7 @@ using DiscordBot.Core.Configuration;
 using DiscordBot.Core.Services;
 using Color = Discord.Color;
 
-namespace DiscordBot.Core.General
+namespace DiscordBot.CommandModules.Core
 {
     [Name("Help")]
     [Summary("Commands used to show how to use this bot.")]

@@ -1,9 +1,9 @@
-﻿using Discord;
-using Discord.Commands;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 
-namespace DiscordBot.Core.General
+namespace DiscordBot.CommandModules.Core
 {
     [Group("Bot")]
     [Summary("Commands for accessing or editing the state of this Discord bot.")]

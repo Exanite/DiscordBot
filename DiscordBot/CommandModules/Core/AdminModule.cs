@@ -5,7 +5,7 @@ using Discord.Commands;
 using Discord.Net;
 using DiscordBot.Core.Extensions;
 
-namespace DiscordBot.Core.General
+namespace DiscordBot.CommandModules.Core
 {
     [Group("Admin")]
     [Summary("Commands used for administering the state of a Discord guild.")]

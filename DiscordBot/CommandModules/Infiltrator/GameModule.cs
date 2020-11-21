@@ -2,8 +2,10 @@
 using Discord;
 using Discord.Commands;
 using DiscordBot.Core.Extensions;
+using DiscordBot.InfiltratorGame;
+using Game = DiscordBot.InfiltratorGame.Game;
 
-namespace DiscordBot.InfiltratorGame
+namespace DiscordBot.CommandModules.InfiltratorGame
 {
     [Group("RPG")]
     [Summary("Commands for the Infiltrator text-based RPG.")]
