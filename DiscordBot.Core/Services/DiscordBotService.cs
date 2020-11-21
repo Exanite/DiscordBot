@@ -14,16 +14,14 @@ namespace DiscordBot.Core.Services
 {
     public class DiscordBotService
     {
-        private readonly IEnumerable<Assembly> assemblies;
         private readonly IServiceProvider provider;
         private readonly DiscordSocketClient client;
         private readonly CommandService commands;
         private readonly DiscordBotConfig config;
         private readonly ILog log;
 
-        public DiscordBotService(IEnumerable<Assembly> assemblies, IServiceProvider provider, DiscordSocketClient client, CommandService commands, DiscordBotConfig config, ILog<DiscordBotService> log)
+        public DiscordBotService(IServiceProvider provider, DiscordSocketClient client, CommandService commands, DiscordBotConfig config, ILog<DiscordBotService> log)
         {
-            this.assemblies = assemblies;
             this.provider = provider;
             this.client = client;
             this.commands = commands;
@@ -50,10 +48,7 @@ namespace DiscordBot.Core.Services
                 log.Fatal("Unable to connect to Discord servers.");
             }
 
-            foreach (var assembly in assemblies)
-            {
-                await commands.AddModulesAsync(assembly, provider);
-            }
+            await commands.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
         }
 
         public async Task Stop()

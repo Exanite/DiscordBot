@@ -73,7 +73,7 @@ namespace DiscordBot
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
+            builder.RegisterAssemblyModules(Assembly.GetEntryAssembly());
 
             return builder.Build();
         }
