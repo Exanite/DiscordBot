@@ -24,7 +24,10 @@ namespace DiscordBot.Core.Serialization
 
         private JsonSerializer CreateJsonSerializer()
         {
-            var settings = new JsonSerializerSettings();
+            var settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+            };
 
             foreach (var converter in converters)
             {
