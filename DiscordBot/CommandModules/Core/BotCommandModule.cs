@@ -1,13 +1,13 @@
-﻿using Discord;
-using Discord.Commands;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 
-namespace DiscordBot.Core.General
+namespace DiscordBot.CommandModules.Core
 {
     [Group("Bot")]
     [Summary("Commands for accessing or editing the state of this Discord bot.")]
-    public class BotModule : ModuleBase<SocketCommandContext>
+    public class BotCommandModule : ModuleBase<SocketCommandContext>
     {
         [Command("Ping")]
         [Summary("Shows the current ping of this bot to the Discord servers.")]

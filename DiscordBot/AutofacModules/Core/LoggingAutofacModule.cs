@@ -4,7 +4,7 @@ using DiscordBot.Core.Logging.Serilog;
 using DiscordBot.Core.Services;
 using Serilog;
 
-namespace DiscordBot.AutofacModules
+namespace DiscordBot.AutofacModules.Core
 {
     public class LoggingAutofacModule : Module
     {

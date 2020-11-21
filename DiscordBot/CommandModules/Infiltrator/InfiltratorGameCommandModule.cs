@@ -2,18 +2,20 @@
 using Discord;
 using Discord.Commands;
 using DiscordBot.Core.Extensions;
+using DiscordBot.InfiltratorGame;
+using Game = DiscordBot.InfiltratorGame.Game;
 
-namespace DiscordBot.InfiltratorGame
+namespace DiscordBot.CommandModules.InfiltratorGame
 {
     [Group("RPG")]
     [Summary("Commands for the Infiltrator text-based RPG.")]
-    public class GameModule : ModuleBase<SocketCommandContext>
+    public class InfiltratorGameCommandModule : ModuleBase<SocketCommandContext>
     {
         private readonly GameManager gameManager;
         private readonly PlayerManager playerManager;
         private readonly SaveManager saveManager;
 
-        public GameModule(GameManager gameManager, PlayerManager playerManager, SaveManager saveManager)
+        public InfiltratorGameCommandModule(GameManager gameManager, PlayerManager playerManager, SaveManager saveManager)
         {
             this.gameManager = gameManager;
             this.playerManager = playerManager;

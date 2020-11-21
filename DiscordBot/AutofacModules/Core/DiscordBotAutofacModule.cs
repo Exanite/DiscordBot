@@ -8,7 +8,7 @@ using DiscordBot.Core.Json;
 using DiscordBot.Core.Logging.Discord;
 using DiscordBot.Core.Services;
 
-namespace DiscordBot.AutofacModules
+namespace DiscordBot.AutofacModules.Core
 {
     public class DiscordBotAutofacModule : Module
     {

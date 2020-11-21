@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using DiscordBot.InfiltratorGame;
 
-namespace DiscordBot.AutofacModules
+namespace DiscordBot.AutofacModules.Infiltrator
 {
     public class InfiltratorGameAutofacModule : Module
     {
