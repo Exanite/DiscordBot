@@ -37,9 +37,6 @@ namespace DiscordBot
                 {
                     Console.WriteLine(e);
                 }
-
-                Console.WriteLine("\nUnhandled exception. Press any key to exit...");
-                Console.ReadKey();
             }
         }
 
