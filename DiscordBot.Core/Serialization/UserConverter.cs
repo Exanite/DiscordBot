@@ -16,7 +16,7 @@ namespace DiscordBot.Core.Serialization
 
         public override IUser ReadJson(JsonReader reader, Type objectType, IUser existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            ulong id = (ulong)reader.Value;
+            ulong id = serializer.Deserialize<ulong>(reader);
 
             return client.GetUser(id);
         }
