@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 namespace DiscordBot.Core.Serialization
 {
+    // not used right now
     public class UserConverter : JsonConverter<IUser>
     {
         private readonly DiscordSocketClient client;

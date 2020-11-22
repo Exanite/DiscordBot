@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using DiscordBot.Core.Serialization;
-using Newtonsoft.Json;
 
 namespace DiscordBot.AutofacModules.Core
 {
@@ -10,8 +9,6 @@ namespace DiscordBot.AutofacModules.Core
         {
             builder.RegisterType<SerializationService>().SingleInstance();
             builder.Register(x => x.Resolve<SerializationService>().Serializer).SingleInstance();
-
-            builder.RegisterType<UserConverter>().As<JsonConverter>().SingleInstance();
         }
     }
 }
