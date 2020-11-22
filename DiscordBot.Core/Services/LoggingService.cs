@@ -24,12 +24,7 @@ namespace DiscordBot.Core.Services
         {
             get
             {
-                if (logger == null)
-                {
-                    logger = CreateLogger();
-                }
-
-                return logger;
+                return logger ??= CreateLogger();
             }
         }
 
