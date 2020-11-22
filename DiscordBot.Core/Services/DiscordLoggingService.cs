@@ -10,7 +10,7 @@ namespace DiscordBot.Core.Services
 {
     public class DiscordLoggingService
     {
-        public const string CommandSourceContext = "Command";
+        private const string CommandSourceContext = "Command";
         private const string DiscordSourceContext = "Discord";
         private const string GatewaySourceContext = "Gateway";
         private const string RestSourceContext = "Rest";

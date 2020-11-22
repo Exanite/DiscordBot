@@ -25,7 +25,7 @@ namespace DiscordBot.InfiltratorGame
         {
             if (channel.Id != data.ChannelId)
             {
-                throw new ArgumentException("channel.Id  must match data.ChannelId.");
+                throw new ArgumentException("channel.Id must match data.ChannelId.");
             }
 
             this.playerManager = playerManager;
